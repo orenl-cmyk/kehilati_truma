@@ -7,8 +7,8 @@
     tries++;
 
     var field =
-      document.querySelector('[name="fld_1764"]') ||
-      document.querySelector('[name="שם הקהילה"]');
+      document.querySelector('[name="fld_2007"]') ||
+      document.querySelector('[name="שם בית הכנסת"]');
 
     var target = document.getElementById('kehilati-community-name');
 
