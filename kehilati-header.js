@@ -8,7 +8,7 @@
 
     var field =
       document.querySelector('[name="fld_2007"]') ||
-      document.querySelector('[name="שם בית הכנסת"]');
+      document.querySelector('[name="שם בית כנסת"]');
 
     var target = document.getElementById('kehilati-community-name');
 
