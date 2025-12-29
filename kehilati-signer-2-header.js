@@ -1,88 +1,59 @@
-(() => {
-  'use strict';
-
-  // ---- config: field names ----
-  const SIGNER_FIELDS = [
-    { first: 'fld_1603', last: 'fld_1604' },                         // מורשה 1
-    { first: 'fld_1603_dup_g_301', last: 'fld_1604_dup_g_301' }       // מורשה 2
+(function () {
+  // איזה שדות מזהים כל "מורשה חתימה"
+  const TARGETS = [
+    { first: "fld_1603", last: "fld_1604", baseTitle: "מורשה חתימה" }, // ראשון
+    { first: "fld_1603_dup_g_301", last: "fld_1604_dup_g_301", baseTitle: "מורשה חתימה" } // שני
   ];
 
-  const HEADER_TEXT = 'מורשה חתימה'; // הכותרת הבסיסית
-
-  function clean(s) {
-    return (s || '').toString().replace(/\s+/g, ' ').trim();
+  function text(el) {
+    return (el && typeof el.value === "string") ? el.value.trim() : "";
   }
 
-  function getInputValueByName(root, name) {
-    const el = root.querySelector(`input[name="${CSS.escape(name)}"]`);
-    if (!el) return '';
-    return clean(el.value || el.getAttribute('value') || '');
-  }
+  function updateHeaders() {
+    document.querySelectorAll(".field_group").forEach(group => {
+      // הכותרת של הקבוצה (הסקשן)
+      const header = group.querySelector(
+        ".d-flex.field_group_name_header .field_group_name_header.ng-binding"
+      );
+      if (!header) return;
 
-  function setHeaderText(headerEl, text) {
-    // חשוב: רק טקסט, בלי innerHTML
-    if (headerEl && headerEl.textContent !== text) {
-      headerEl.textContent = text;
-    }
-  }
+      // נעדכן רק אם בתוך הקבוצה קיימים השדות שמזהים אותה
+      for (const t of TARGETS) {
+        const firstEl = group.querySelector(`input[name="${t.first}"]`);
+        const lastEl  = group.querySelector(`input[name="${t.last}"]`);
+        if (!firstEl || !lastEl) continue;
 
-  function findGroupHeaders() {
-    // מוצא את הכותרות בתוך כל field_group
-    return Array.from(document.querySelectorAll('.field_group .field_group_name_header[ng-if="view_state == \'1\'"]'));
-  }
+        const fullName = `${text(firstEl)} ${text(lastEl)}`.trim();
+        header.textContent = fullName ? `${t.baseTitle} – ${fullName}` : t.baseTitle;
 
-  function updateAllSignerHeaders() {
-    const headers = findGroupHeaders();
-
-    headers.forEach((headerEl) => {
-      const base = clean(headerEl.textContent);
-
-      // רק כותרות שהן "מורשה חתימה" (גם אם כבר הוספנו שם – נזהה לפי התחלה)
-      if (!base.startsWith(HEADER_TEXT)) return;
-
-      const groupEl = headerEl.closest('.field_group');
-      if (!groupEl) return;
-
-      // איזה מורשה זה? נזהה לפי השדות שקיימים בתוך אותה קבוצה
-      let matched = null;
-      for (const f of SIGNER_FIELDS) {
-        const hasFirst = !!groupEl.querySelector(`input[name="${CSS.escape(f.first)}"]`);
-        const hasLast  = !!groupEl.querySelector(`input[name="${CSS.escape(f.last)}"]`);
-        if (hasFirst || hasLast) { matched = f; break; }
+        // סימון פנימי כדי שלא תתבלבלו בדיבאג
+        header.setAttribute("data-kehilati-dynamic", "1");
+        break;
       }
-      if (!matched) return;
-
-      const firstName = getInputValueByName(groupEl, matched.first);
-      const lastName  = getInputValueByName(groupEl, matched.last);
-      const fullName  = clean([firstName, lastName].filter(Boolean).join(' '));
-
-      // אם עדיין אין ערכים – נשאיר "מורשה חתימה" נקי
-      const finalText = fullName ? `${HEADER_TEXT} – ${fullName}` : HEADER_TEXT;
-
-      setHeaderText(headerEl, finalText);
     });
   }
 
-  // ---- run once + keep alive ----
-  function boot() {
-    updateAllSignerHeaders();
+  // בגלל שאוריגמי/אנגולר מרנדר מחדש – מאזינים לשינויים ומעדכנים שוב
+  const debouncedUpdate = (() => {
+    let t = null;
+    return () => {
+      clearTimeout(t);
+      t = setTimeout(updateHeaders, 50);
+    };
+  })();
 
-    // פולינג קצר (כי לפעמים הערכים נטענים שנייה אחרי)
-    let tries = 0;
-    const t = setInterval(() => {
-      updateAllSignerHeaders();
-      tries += 1;
-      if (tries >= 20) clearInterval(t); // ~10 שניות
-    }, 500);
+  const mo = new MutationObserver(debouncedUpdate);
+  mo.observe(document.documentElement, { childList: true, subtree: true });
 
-    // Observers לרינדורים מחדש
-    const mo = new MutationObserver(() => updateAllSignerHeaders());
-    mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-  }
+  document.addEventListener(
+    "input",
+    (e) => {
+      const n = e.target && e.target.name;
+      if (!n) return;
+      if (TARGETS.some(t => t.first === n || t.last === n)) updateHeaders();
+    },
+    true
+  );
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  updateHeaders();
 })();
