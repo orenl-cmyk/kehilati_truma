@@ -1,34 +1,30 @@
 (function () {
-  var MAX_TRIES = 30;
-  var INTERVAL = 300;
-  var tries = 0;
+  function updateSignerHeader(firstNameFld, lastNameFld) {
+    const firstNameInput = document.querySelector(`[data-name="${firstNameFld}"] input`);
+    const lastNameInput  = document.querySelector(`[data-name="${lastNameFld}"] input`);
 
-  var timer = setInterval(function () {
-    tries++;
+    if (!firstNameInput || !lastNameInput) return;
 
-    // שדות מורשה חתימה שני
-    var firstName = document.querySelector('[name="fld_1603_dup_g_301"]');
-    var lastName  = document.querySelector('[name="fld_1604_dup_g_301"]');
+    const firstName = firstNameInput.value?.trim();
+    const lastName  = lastNameInput.value?.trim();
+    if (!firstName && !lastName) return;
 
-    if (!firstName || !lastName) {
-      if (tries >= MAX_TRIES) clearInterval(timer);
-      return;
-    }
+    // עלייה לסקשן שמכיל את השדות
+    const section = firstNameInput.closest('.field_group');
+    if (!section) return;
 
-    var fullName = [firstName.value, lastName.value].filter(Boolean).join(' ');
-    if (!fullName) return;
+    const header = section.querySelector('.field_group_name_header');
+    if (!header) return;
 
-    // כל כותרות הסקשנים
-    var headers = document.querySelectorAll('.field_group_name_header');
+    header.textContent = `מורשה חתימה – ${firstName} ${lastName}`.trim();
+  }
 
-    if (headers.length < 2) {
-      if (tries >= MAX_TRIES) clearInterval(timer);
-      return;
-    }
+  function run() {
+    updateSignerHeader('fld_1603', 'fld_1604');
+    updateSignerHeader('fld_1603_dup_g_301', 'fld_1604_dup_g_301');
+  }
 
-    var secondHeader = headers[1]; // הסקשן השני
-    secondHeader.textContent = 'מורשה חתימה – ' + fullName;
-
-    clearInterval(timer);
-  }, INTERVAL);
+  // ריצה ראשונית + ריצה נוספת לאחר טעינה
+  setTimeout(run, 500);
+  setTimeout(run, 1500);
 })();
