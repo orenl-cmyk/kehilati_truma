@@ -1,30 +1,46 @@
 (function () {
-  function updateSignerHeader(firstNameFld, lastNameFld) {
-    const firstNameInput = document.querySelector(`[data-name="${firstNameFld}"] input`);
-    const lastNameInput  = document.querySelector(`[data-name="${lastNameFld}"] input`);
 
-    if (!firstNameInput || !lastNameInput) return;
+  function updateHeaderByField(firstNameFld, lastNameFld) {
+    // תופסים את השדות לפי name (זה קיים אצלך בוודאות)
+    const firstNameInput = document.querySelector(`input[name="${firstNameFld}"]`);
+    const lastNameInput  = document.querySelector(`input[name="${lastNameFld}"]`);
 
-    const firstName = firstNameInput.value?.trim();
-    const lastName  = lastNameInput.value?.trim();
+    if (!firstNameInput && !lastNameInput) return;
+
+    const firstName = firstNameInput?.value?.trim() || '';
+    const lastName  = lastNameInput?.value?.trim() || '';
     if (!firstName && !lastName) return;
 
-    // עלייה לסקשן שמכיל את השדות
-    const section = firstNameInput.closest('.field_group');
+    const fullName = `${firstName} ${lastName}`.trim();
+
+    // עולים לסקשן שמכיל את השדה
+    const section =
+      firstNameInput?.closest('.field_group') ||
+      lastNameInput?.closest('.field_group');
+
     if (!section) return;
 
+    // תופסים רק את הכותרת של אותו סקשן
     const header = section.querySelector('.field_group_name_header');
     if (!header) return;
 
-    header.textContent = `מורשה חתימה – ${firstName} ${lastName}`.trim();
+    header.textContent = `מורשה חתימה – ${fullName}`;
   }
 
   function run() {
-    updateSignerHeader('fld_1603', 'fld_1604');
-    updateSignerHeader('fld_1603_dup_g_301', 'fld_1604_dup_g_301');
+    // מורשה ראשון
+    updateHeaderByField('fld_1603', 'fld_1604');
+
+    // מורשה שני
+    updateHeaderByField('fld_1603_dup_g_301', 'fld_1604_dup_g_301');
   }
 
-  // ריצה ראשונית + ריצה נוספת לאחר טעינה
-  setTimeout(run, 500);
-  setTimeout(run, 1500);
+  // polling עד שהטופס נטען
+  let tries = 0;
+  const timer = setInterval(function () {
+    tries++;
+    run();
+    if (tries > 20) clearInterval(timer);
+  }, 300);
+
 })();
