@@ -1,57 +1,81 @@
+/**
+ * Origami – Hide Prefilled Fields via ?hidden=
+ * --------------------------------------------
+ * ✔ משתמש במנגנון native של Origami
+ * ✔ עובד לפני רינדור – בלי קפיצות
+ * ✔ פותר קובץ / חתימה / כל סוג שדה
+ * ✔ חד-פעמי
+ */
+
 (function () {
 
-  function getHiddenSet() {
-    const url = new URL(window.location.href);
-    return new Set(
-      (url.searchParams.get('hidden') || '').split(',').filter(Boolean)
-    );
+  // הגנה מלולאה אינסופית
+  if (sessionStorage.getItem('origami_hidden_applied')) {
+    return;
   }
 
-  function getFieldDataName(wrapper) {
-    const el = wrapper.querySelector('[class*="fld_"]');
-    if (!el) return null;
-    return Array.from(el.classList).find(c => c.startsWith('fld_'));
-  }
-
-  function hasValue(wrapper) {
+  function fieldHasValue(wrapper) {
+    // input רגיל
     const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
-    if (input && input.value.trim() !== '') return true;
-    if (wrapper.querySelector('.files a')) return true;
-    if (wrapper.querySelector('.signature-field-container img')) return true;
+    if (input && input.value && input.value.trim() !== '') {
+      return true;
+    }
+
+    // קובץ
+    if (wrapper.querySelector('.files a')) {
+      return true;
+    }
+
+    // חתימה
+    if (wrapper.querySelector('.signature-field-container img')) {
+      return true;
+    }
+
     return false;
   }
 
-  function enhance() {
-    const hiddenSet = getHiddenSet();
+  function getFieldDataName(wrapper) {
+    // class כמו: fld_1597
+    const fldClass = Array.from(wrapper.querySelectorAll('[class*="fld_"]'))
+      .map(el => Array.from(el.classList).find(c => c.startsWith('fld_')))
+      .find(Boolean);
 
-    document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
-      const fld = getFieldDataName(wrapper);
-      if (!fld || hiddenSet.has(fld)) return;
-
-      if (!hasValue(wrapper)) {
-        wrapper.classList.add('prefill-highlight');
-
-        const complete = () => {
-          if (!hasValue(wrapper)) return;
-
-          const url = new URL(window.location.href);
-          const current = new Set(
-            (url.searchParams.get('hidden') || '').split(',').filter(Boolean)
-          );
-          current.add(fld);
-          url.searchParams.set('hidden', Array.from(current).join(','));
-
-          window.location.replace(url.toString());
-        };
-
-        wrapper.addEventListener('change', complete, { once: true });
-        wrapper.addEventListener('blur', complete, { once: true });
-      }
-    });
+    return fldClass || null;
   }
 
+  function applyHiddenParam() {
+    const hiddenFields = [];
+
+    document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
+      if (!fieldHasValue(wrapper)) return;
+
+      const fld = getFieldDataName(wrapper);
+      if (fld) {
+        hiddenFields.push(fld);
+      }
+    });
+
+    if (!hiddenFields.length) return;
+
+    const url = new URL(window.location.href);
+
+    // מאחד עם hidden קיים אם יש
+    const existing = url.searchParams.get('hidden');
+    const allHidden = new Set(
+      (existing ? existing.split(',') : []).concat(hiddenFields)
+    );
+
+    url.searchParams.set('hidden', Array.from(allHidden).join(','));
+
+    sessionStorage.setItem('origami_hidden_applied', '1');
+
+    // replace = בלי להוסיף ל-history
+    window.location.replace(url.toString());
+  }
+
+  // מחכים לטעינה ראשונית כדי לזהות ערכים
   window.addEventListener('load', () => {
-    setTimeout(enhance, 200);
+    setTimeout(applyHiddenParam, 150);
   }, { once: true });
 
 })();
