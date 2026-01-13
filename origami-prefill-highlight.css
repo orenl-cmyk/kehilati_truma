@@ -1,32 +1,26 @@
-/* ===== Empty field highlight (stronger, same mechanism) ===== */
+/* ===============================
+   Empty field highlight – stronger red
+   =============================== */
 
-/* צובע גם את שם השדה */
-.form_data_element_wrap.empty-field .field_name {
-  background: rgba(220, 53, 69, 0.12);
-  border-radius: 8px;
-  padding: 6px 10px;
-  margin-bottom: 6px;
-}
-
-/* עוטף את השדה עצמו */
+/* אזור השדה */
 .form_data_element_wrap.empty-field .field {
-  background: rgba(220, 53, 69, 0.14);
-  border-radius: 10px;
-  padding: 10px;
+  background: rgba(220, 53, 69, 0.16); /* היה 0.08 */
+  border-radius: 6px;
+  padding: 8px; /* קצת יותר נפח */
 }
 
-/* קלטים פנימיים */
+/* input עצמו */
 .form_data_element_wrap.empty-field input,
 .form_data_element_wrap.empty-field textarea,
 .form_data_element_wrap.empty-field select,
 .form_data_element_wrap.empty-field .select2-choice {
   background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(220, 53, 69, 0.55);
 }
 
-/* בונוס: מסגרת עדינה לכל הבלוק (לא חובה) */
-.form_data_element_wrap.empty-field {
-  outline: 1px solid rgba(220, 53, 69, 0.25);
-  outline-offset: 3px;
-  border-radius: 12px;
+/* מסגרת ברורה יותר */
+.form_data_element_wrap.empty-field .field input,
+.form_data_element_wrap.empty-field .field textarea,
+.form_data_element_wrap.empty-field .field select,
+.form_data_element_wrap.empty-field .field .select2-choice {
+  border: 1px solid rgba(220, 53, 69, 0.65); /* היה 0.4 */
 }
