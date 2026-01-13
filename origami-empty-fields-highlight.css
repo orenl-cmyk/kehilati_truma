@@ -1,0 +1,24 @@
+/* ===============================
+   Empty field highlight – soft red
+   =============================== */
+
+/* אזור השדה */
+.form_data_element_wrap.empty-field .field {
+  background: rgba(220, 53, 69, 0.08); /* אדום עדין */
+  border-radius: 6px;
+  padding: 6px;
+}
+
+/* input עצמו */
+.form_data_element_wrap.empty-field input,
+.form_data_element_wrap.empty-field textarea,
+.form_data_element_wrap.empty-field select {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* אופציונלי: מסגרת עדינה */
+.form_data_element_wrap.empty-field .field input,
+.form_data_element_wrap.empty-field .field textarea,
+.form_data_element_wrap.empty-field .field select {
+  border: 1px solid rgba(220, 53, 69, 0.4);
+}
