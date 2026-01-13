@@ -1,19 +1,16 @@
 /**
- * Origami – Empty Fields Highlight (Stable Version)
- * -------------------------------------------------
- * ✔ מדגיש שדות ריקים באדום עדין
- * ✔ תומך Selection (Select2)
- * ✔ תומך Relation (Select-from-entity)
- * ✔ Checkbox תמיד נחשב תקין
- * ✔ קובץ / חתימה נחשבים מלאים אם קיימים
- * ✔ עובד בכל מבנה טופס (עמודים / עמוד אחד)
+ * Origami – Empty Fields Highlight (FINAL, stable)
+ * ------------------------------------------------
+ * ✔ מסמן שדות ריקים באדום עדין
+ * ✔ מסיר אדום מיד כשמתמלא
+ * ✔ תומך Select2 (Selection + Relation)
+ * ✔ Checkbox מחוץ למשוואה
+ * ✔ File / Signature נתמכים
+ * ✔ עובד גם עם שינויים דינמיים
  */
 
 (function () {
 
-  /**
-   * בודק האם לשדה יש ערך לוגי
-   */
   function hasValue(wrapper) {
 
     // 0. Checkbox – תמיד תקין
@@ -38,7 +35,7 @@
       return true;
     }
 
-    // 4. Input / Textarea רגיל (לא checkbox ולא select2-offscreen)
+    // 4. Input / Textarea רגיל
     const input = wrapper.querySelector(
       'input:not([type=hidden]):not([type=checkbox]):not(.select2-offscreen), textarea'
     );
@@ -59,30 +56,38 @@
     return false;
   }
 
-  /**
-   * מחיל / מסיר הדגשה
-   */
-  function applyHighlight() {
-    document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
-
-      if (!hasValue(wrapper)) {
-        wrapper.classList.add('empty-field');
-      } else {
-        wrapper.classList.remove('empty-field');
-      }
-
-      // מאזין להסרה בלבד (כשמתמלא)
-      wrapper.addEventListener('change', () => {
-        if (hasValue(wrapper)) {
-          wrapper.classList.remove('empty-field');
-        }
-      });
-    });
+  function updateWrapper(wrapper) {
+    if (hasValue(wrapper)) {
+      wrapper.classList.remove('empty-field');
+    } else {
+      wrapper.classList.add('empty-field');
+    }
   }
 
-  // מריצים אחרי טעינה (Origami + Angular)
+  function bind(wrapper) {
+    // בדיקה ראשונית
+    updateWrapper(wrapper);
+
+    // האזנה לאירועים רגילים
+    wrapper.addEventListener('change', () => updateWrapper(wrapper));
+    wrapper.addEventListener('input', () => updateWrapper(wrapper));
+
+    // Select2 / Angular לפעמים לא יורים אירוע → polling עדין
+    let checks = 0;
+    const interval = setInterval(() => {
+      updateWrapper(wrapper);
+      checks++;
+      if (checks > 20) clearInterval(interval); // ~3 שניות וזהו
+    }, 150);
+  }
+
+  function init() {
+    document.querySelectorAll('.form_data_element_wrap').forEach(bind);
+  }
+
+  // מחכים ל־Origami + Angular
   window.addEventListener('load', () => {
-    setTimeout(applyHighlight, 200);
+    setTimeout(init, 300);
   }, { once: true });
 
 })();
