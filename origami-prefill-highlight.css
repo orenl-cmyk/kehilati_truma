@@ -1,28 +1,39 @@
 /* =====================================
-   Empty field – strong but clean highlight
+   Empty field – full visual emphasis
+   works with inline-block grid
    ===================================== */
 
-/* כל הבלוק של השדה */
-.form_data_element_wrap:has(.field[data-empty="1"]) {
-  background: rgba(220, 53, 69, 0.12); /* יותר נוכחות */
-  border-radius: 12px;
-  padding: 12px 12px 14px;
-  transition: background 0.25s ease;
+.form_data_element_wrap {
+  position: relative;
+}
+
+/* שכבת רקע אמיתית */
+.form_data_element_wrap:has(.field[data-empty="1"])::before {
+  content: "";
+  position: absolute;
+  inset: 0;                 /* תופס את כל הבלוק */
+  background: rgba(220, 53, 69, 0.14);
+  border-radius: 14px;
+  z-index: 0;
 }
 
 /* שם השדה */
 .form_data_element_wrap:has(.field[data-empty="1"]) .field_name {
-  background: rgba(220, 53, 69, 0.18);
-  border-radius: 8px;
+  background: rgba(220, 53, 69, 0.22);
+  border-radius: 10px;
   padding: 6px 10px;
   margin-bottom: 6px;
+  position: relative;
+  z-index: 1;
 }
 
-/* השדה עצמו – חיזוק עדין */
+/* השדה עצמו */
 .form_data_element_wrap:has(.field[data-empty="1"]) .field {
-  background: rgba(220, 53, 69, 0.08);
-  border-radius: 8px;
-  padding: 8px;
+  background: rgba(220, 53, 69, 0.10);
+  border-radius: 10px;
+  padding: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 /* מסגרות פנימיות */
@@ -34,16 +45,10 @@
   select,
 .form_data_element_wrap:has(.field[data-empty="1"])
   .select2-choice {
-  border-color: rgba(220, 53, 69, 0.55);
+  border-color: rgba(220, 53, 69, 0.6);
 }
 
-/* ניקוי מוחלט כשהשדה מלא */
-.form_data_element_wrap:has(.field[data-empty="0"]) {
-  background: none;
-  padding: initial;
-}
-
-.form_data_element_wrap:has(.field[data-empty="0"]) .field_name,
-.form_data_element_wrap:has(.field[data-empty="0"]) .field {
-  background: none;
+/* ניקוי כשמלא */
+.form_data_element_wrap:has(.field[data-empty="0"])::before {
+  content: none;
 }
