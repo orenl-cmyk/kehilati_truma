@@ -1,14 +1,14 @@
-/* Empty field – soft red (FIELD based) */
-
-.field.empty-field {
-  background: rgba(220, 53, 69, 0.08);
-  border-radius: 6px;
-  padding: 6px;
+/* רמז עדין לשדות שעדיין ריקים ולא נגעו בהם */
+.field :is(input, textarea, select).ng-pristine.ng-empty {
+  background-color: rgba(220, 53, 69, 0.06);
+  border-color: rgba(220, 53, 69, 0.35);
 }
 
-.field.empty-field input,
-.field.empty-field textarea,
-.field.empty-field select {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(220, 53, 69, 0.4);
+/* Select2 – צביעה דרך ה-choice */
+.field .select2-choice:has(.select2-chosen:empty),
+.field .select2-choice.ng-pristine {
+  background-color: rgba(220, 53, 69, 0.06);
+  border-color: rgba(220, 53, 69, 0.35);
 }
+
+/* ברגע שיש ערך – הכל נעלם אוטומטית */
