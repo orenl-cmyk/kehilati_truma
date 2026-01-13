@@ -1,16 +1,18 @@
 /**
- * Origami – Hide Prefilled Fields (Angular-safe)
- * ---------------------------------------------
- * ✔ מסתיר את כל בלוק השדה (כולל label)
- * ✔ תומך קובץ / חתימה / טקסט / מייל / טלפון
- * ✔ רץ פעם אחת בלבד
- * ✔ מחכה ל-Angular שיסיים לצייר
+ * Origami – Hide Prefilled Fields via ?hidden=
+ * --------------------------------------------
+ * ✔ משתמש במנגנון native של Origami
+ * ✔ עובד לפני רינדור – בלי קפיצות
+ * ✔ פותר קובץ / חתימה / כל סוג שדה
+ * ✔ חד-פעמי
  */
 
 (function () {
 
-  let attempts = 0;
-  const MAX_ATTEMPTS = 20;
+  // הגנה מלולאה אינסופית
+  if (sessionStorage.getItem('origami_hidden_applied')) {
+    return;
+  }
 
   function fieldHasValue(wrapper) {
     // input רגיל
@@ -32,31 +34,48 @@
     return false;
   }
 
-  function tryHide() {
-    attempts++;
+  function getFieldDataName(wrapper) {
+    // class כמו: fld_1597
+    const fldClass = Array.from(wrapper.querySelectorAll('[class*="fld_"]'))
+      .map(el => Array.from(el.classList).find(c => c.startsWith('fld_')))
+      .find(Boolean);
 
-    let foundAny = false;
+    return fldClass || null;
+  }
+
+  function applyHiddenParam() {
+    const hiddenFields = [];
 
     document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
-      if (fieldHasValue(wrapper)) {
-        wrapper.style.display = 'none';
-        foundAny = true;
+      if (!fieldHasValue(wrapper)) return;
+
+      const fld = getFieldDataName(wrapper);
+      if (fld) {
+        hiddenFields.push(fld);
       }
     });
 
-    // אם עדיין אין קבצים / חתימות בדום – ננסה שוב
-    if (!foundAny && attempts < MAX_ATTEMPTS) {
-      setTimeout(tryHide, 150);
-    } else {
-      document.body.style.visibility = 'visible';
-    }
+    if (!hiddenFields.length) return;
+
+    const url = new URL(window.location.href);
+
+    // מאחד עם hidden קיים אם יש
+    const existing = url.searchParams.get('hidden');
+    const allHidden = new Set(
+      (existing ? existing.split(',') : []).concat(hiddenFields)
+    );
+
+    url.searchParams.set('hidden', Array.from(allHidden).join(','));
+
+    sessionStorage.setItem('origami_hidden_applied', '1');
+
+    // replace = בלי להוסיף ל-history
+    window.location.replace(url.toString());
   }
 
-  // מסתירים את כל הטופס עד הסיום – בלי קפיצות
-  document.body.style.visibility = 'hidden';
-
+  // מחכים לטעינה ראשונית כדי לזהות ערכים
   window.addEventListener('load', () => {
-    setTimeout(tryHide, 200);
+    setTimeout(applyHiddenParam, 150);
   }, { once: true });
 
 })();
