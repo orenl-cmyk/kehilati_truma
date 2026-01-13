@@ -1,0 +1,57 @@
+/* ===============================
+   Kehilati – Prefill Highlight
+   =============================== */
+
+.form_data_element_wrap.prefill-highlight {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    #0b5cff,
+    #1da1f2,
+    #23d2ff
+  );
+  padding: 14px 14px 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(11, 92, 255, 0.25);
+  transition: all 0.35s ease;
+}
+
+/* שם השדה */
+.form_data_element_wrap.prefill-highlight .field_name {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+/* אזור העריכה */
+.form_data_element_wrap.prefill-highlight input,
+.form_data_element_wrap.prefill-highlight textarea,
+.form_data_element_wrap.prefill-highlight select {
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+/* תגית "נדרש להשלים" */
+.form_data_element_wrap.prefill-highlight::after {
+  content: "נדרש להשלים";
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: #ffffff;
+  color: #0b5cff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* אנימציה עדינה */
+.form_data_element_wrap.prefill-highlight {
+  animation: keh-pulse 2.2s infinite;
+}
+
+@keyframes keh-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(35,210,255,0.55); }
+  70%  { box-shadow: 0 0 0 14px rgba(35,210,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(35,210,255,0); }
+}
