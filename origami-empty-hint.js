@@ -1,39 +1,59 @@
 (function () {
 
+  const PLACEHOLDER_TEXTS = ['- בחר -'];
+
+  function isSelectListEmpty(field) {
+    const chosen = field.querySelector('.select2-chosen');
+    if (!chosen) return true;
+
+    const text = chosen.textContent.trim();
+    return text === '' || PLACEHOLDER_TEXTS.includes(text);
+  }
+
+  function isRelationEmpty(field) {
+    const chosen = field.querySelector('.select2-chosen');
+    if (!chosen) return true;
+
+    return chosen.textContent.trim() === '';
+  }
+
   function isEmptyField(field) {
 
-    // Checkbox – תמיד תקין
+    // 1️⃣ Checkbox – תמיד תקין
     if (field.querySelector('input[type="checkbox"]')) {
       return false;
     }
 
-    // Select רגיל
+    // 2️⃣ SELECT (בחירה)
+    if (field.classList.contains('select-list')) {
+      return isSelectListEmpty(field);
+    }
+
+    // 3️⃣ RELATION (select-from-entity)
+    if (field.classList.contains('select-from-entity')) {
+      return isRelationEmpty(field);
+    }
+
+    // 4️⃣ SELECT רגיל
     const select = field.querySelector('select[name^="fld_"]');
     if (select) {
       return !select.value;
     }
 
-    // Select2 (בחירה / קישור)
-    const chosen = field.querySelector('.select2-chosen');
-    if (chosen) {
-      const txt = chosen.textContent.trim();
-      return txt === '' || txt === '- בחר -';
-    }
-
-    // Input / textarea
+    // 5️⃣ INPUT / TEXTAREA
     const input = field.querySelector(
       'input[name^="fld_"]:not([type="hidden"]):not(.select2-offscreen), textarea'
     );
     if (input) {
-      return !input.value.trim();
+      return input.value.trim() === '';
     }
 
-    // קובץ
+    // 6️⃣ FILE
     if (field.querySelector('.files a')) {
       return false;
     }
 
-    // חתימה
+    // 7️⃣ SIGNATURE
     if (field.querySelector('.signature-field-container img')) {
       return false;
     }
@@ -50,11 +70,11 @@
   window.addEventListener('load', () => {
     scan();
 
-    // סריקה קצרה – כי Origami מצייר מחדש
+    // סריקה קצרה כי Origami / Select2 מתעדכנים דינמית
     let i = 0;
     const t = setInterval(() => {
       scan();
-      if (++i > 20) clearInterval(t); // ~3 שניות
+      if (++i > 20) clearInterval(t);
     }, 150);
   });
 
