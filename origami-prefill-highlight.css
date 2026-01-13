@@ -1,26 +1,32 @@
 /* ===============================
-   Empty field highlight – stronger red
+   Empty field – focused red highlight
    =============================== */
 
-/* אזור השדה */
+/* לא צובעים את כל הבלוק */
 .form_data_element_wrap.empty-field .field {
-  background: rgba(220, 53, 69, 0.16); /* היה 0.08 */
-  border-radius: 6px;
-  padding: 8px; /* קצת יותר נפח */
+  background: none;
+  padding: 0;
 }
 
-/* input עצמו */
+/* INPUT / TEXTAREA */
 .form_data_element_wrap.empty-field input,
-.form_data_element_wrap.empty-field textarea,
-.form_data_element_wrap.empty-field select,
-.form_data_element_wrap.empty-field .select2-choice {
-  background: rgba(255, 255, 255, 0.92);
+.form_data_element_wrap.empty-field textarea {
+  border: 2px solid rgba(220, 53, 69, 0.9); /* אדום ברור */
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15); /* הילה עדינה */
+  border-radius: 6px;
 }
 
-/* מסגרת ברורה יותר */
-.form_data_element_wrap.empty-field .field input,
-.form_data_element_wrap.empty-field .field textarea,
-.form_data_element_wrap.empty-field .field select,
-.form_data_element_wrap.empty-field .field .select2-choice {
-  border: 1px solid rgba(220, 53, 69, 0.65); /* היה 0.4 */
+/* SELECT רגיל */
+.form_data_element_wrap.empty-field select {
+  border: 2px solid rgba(220, 53, 69, 0.9);
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15);
+  border-radius: 6px;
+}
+
+/* SELECT2 (בחירה / קישור) */
+.form_data_element_wrap.empty-field .select2-choice {
+  border: 2px solid rgba(220, 53, 69, 0.9);
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.15);
+  border-radius: 6px;
+  background: #fff;
 }
