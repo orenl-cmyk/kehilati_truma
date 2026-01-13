@@ -1,14 +1,30 @@
-/* רמז עדין לשדות שעדיין ריקים ולא נגעו בהם */
+/* =========================================
+   רמז ויזואלי עדין לשדות שעדיין ריקים
+   בלי חובה, בלי נקודה אדומה
+   מבוסס Angular state (Origami native)
+   ========================================= */
+
+/* טקסט / מייל / טלפון / שעה / select רגיל */
 .field :is(input, textarea, select).ng-pristine.ng-empty {
   background-color: rgba(220, 53, 69, 0.06);
   border-color: rgba(220, 53, 69, 0.35);
 }
 
-/* Select2 – צביעה דרך ה-choice */
+/* אחרי שמילאו – הצבע נעלם אוטומטית */
+.field :is(input, textarea, select).ng-not-empty {
+  background-color: unset;
+  border-color: unset;
+}
+
+/* Select2 (בחירה / קישור) */
 .field .select2-choice:has(.select2-chosen:empty),
 .field .select2-choice.ng-pristine {
   background-color: rgba(220, 53, 69, 0.06);
   border-color: rgba(220, 53, 69, 0.35);
 }
 
-/* ברגע שיש ערך – הכל נעלם אוטומטית */
+/* אם יש ערך ב-Select2 – נקה */
+.field .select2-choice:has(.select2-chosen:not(:empty)) {
+  background-color: unset;
+  border-color: unset;
+}
