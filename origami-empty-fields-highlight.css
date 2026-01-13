@@ -1,24 +1,32 @@
-/* ===============================
-   Empty field highlight – soft red
-   =============================== */
+/* ===== Empty field highlight (stronger, same mechanism) ===== */
 
-/* אזור השדה */
-.form_data_element_wrap.empty-field .field {
-  background: rgba(220, 53, 69, 0.08); /* אדום עדין */
-  border-radius: 6px;
-  padding: 6px;
+/* צובע גם את שם השדה */
+.form_data_element_wrap.empty-field .field_name {
+  background: rgba(220, 53, 69, 0.12);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
 }
 
-/* input עצמו */
+/* עוטף את השדה עצמו */
+.form_data_element_wrap.empty-field .field {
+  background: rgba(220, 53, 69, 0.14);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+/* קלטים פנימיים */
 .form_data_element_wrap.empty-field input,
 .form_data_element_wrap.empty-field textarea,
-.form_data_element_wrap.empty-field select {
-  background: rgba(255, 255, 255, 0.9);
+.form_data_element_wrap.empty-field select,
+.form_data_element_wrap.empty-field .select2-choice {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(220, 53, 69, 0.55);
 }
 
-/* אופציונלי: מסגרת עדינה */
-.form_data_element_wrap.empty-field .field input,
-.form_data_element_wrap.empty-field .field textarea,
-.form_data_element_wrap.empty-field .field select {
-  border: 1px solid rgba(220, 53, 69, 0.4);
+/* בונוס: מסגרת עדינה לכל הבלוק (לא חובה) */
+.form_data_element_wrap.empty-field {
+  outline: 1px solid rgba(220, 53, 69, 0.25);
+  outline-offset: 3px;
+  border-radius: 12px;
 }
