@@ -1,11 +1,10 @@
 /**
- * Origami – Empty Fields Highlight (FIELD-based, FINAL)
- * ----------------------------------------------------
- * ✔ עובד על .field (לא wrapper משתנה)
- * ✔ Selection / Relation (Select2) מזוהים נכון
- * ✔ Time fields מזוהים לפי value אמיתי
+ * Origami – Empty Fields Highlight (FINAL FINAL)
+ * ---------------------------------------------
+ * ✔ עובד רק על .field.fld_XXXX
+ * ✔ תומך Text / Time / Select / Relation (Select2)
  * ✔ Checkbox מחוץ למשוואה
- * ✔ הצבע יורד מיד כשיש ערך
+ * ✔ לא תלוי באירועים
  */
 
 (function () {
@@ -20,14 +19,14 @@
     return EMPTY_TEXTS.includes(norm(t));
   }
 
-  function hasValue(field) {
+  function fieldHasValue(field) {
 
-    /* 0. Checkbox – תמיד תקין */
+    /* 1. Checkbox – תמיד תקין */
     if (field.querySelector('input[type=checkbox]')) {
       return true;
     }
 
-    /* 1. Select / Select2 (Selection + Relation) */
+    /* 2. Select / Relation (Select2) */
     const select = field.querySelector('select[name^="fld_"]');
     if (select) {
       return !isEmptyText(select.value);
@@ -38,12 +37,12 @@
       return !isEmptyText(chosen.textContent);
     }
 
-    /* 2. Radio */
+    /* 3. Radio */
     if (field.querySelector('input[type=radio]:checked')) {
       return true;
     }
 
-    /* 3. Time / Date / Text inputs */
+    /* 4. Input / Time / Text */
     const input = field.querySelector(
       'input[name^="fld_"]:not([type=hidden]):not(.select2-offscreen), textarea'
     );
@@ -51,12 +50,12 @@
       return true;
     }
 
-    /* 4. File */
+    /* 5. File */
     if (field.querySelector('.files a')) {
       return true;
     }
 
-    /* 5. Signature */
+    /* 6. Signature */
     if (field.querySelector('.signature-field-container img')) {
       return true;
     }
@@ -64,37 +63,25 @@
     return false;
   }
 
-  function update(field) {
-    if (hasValue(field)) {
-      field.classList.remove('empty-field');
-    } else {
-      field.classList.add('empty-field');
-    }
+  function scan() {
+    document.querySelectorAll('.field[class*="fld_"]').forEach(field => {
+      if (fieldHasValue(field)) {
+        field.classList.remove('empty-field');
+      } else {
+        field.classList.add('empty-field');
+      }
+    });
   }
 
-  function bind(field) {
-    update(field);
-
-    const handler = () => update(field);
-
-    field.addEventListener('change', handler);
-    field.addEventListener('input', handler);
-    field.addEventListener('blur', handler, true);
-
-    // Select2 / Angular – ריענון קצר
-    let i = 0;
-    const t = setInterval(() => {
-      update(field);
-      if (++i > 20) clearInterval(t);
-    }, 150);
-  }
-
-  function init() {
-    document.querySelectorAll('.field[class*="fld_"]').forEach(bind);
-  }
-
+  // סריקה ראשונית + מחזורית קצרה (Select2 / Angular)
   window.addEventListener('load', () => {
-    setTimeout(init, 300);
-  }, { once: true });
+    scan();
+
+    let runs = 0;
+    const t = setInterval(() => {
+      scan();
+      if (++runs > 20) clearInterval(t); // ~3 שניות וזהו
+    }, 150);
+  });
 
 })();
