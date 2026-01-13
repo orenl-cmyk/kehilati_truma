@@ -4,22 +4,22 @@
 
 /* מדגישים רק את אזור העריכה */
 .form_data_element_wrap.prefill-highlight .field {
-  background: rgba(11, 92, 255, 0.15); /* כחול עדין */
+  background:none; /* כחול עדין */
   border-radius: 8px;
-  padding: 8px;
+  padding: 0px;
 }
 
 /* input עצמו */
 .form_data_element_wrap.prefill-highlight input,
 .form_data_element_wrap.prefill-highlight textarea,
 .form_data_element_wrap.prefill-highlight select {
-  background: rgba(255, 255, 255, 0.7);
+  background: none;
 }
 
 /* קובץ / חתימה */
 .form_data_element_wrap.prefill-highlight .file-upload-container,
 .form_data_element_wrap.prefill-highlight .signature-field-container {
-  background: rgba(11, 92, 255, 0.15);
+  background: none;
   border-radius: 8px;
-  padding: 8px;
+  padding: 0px;
 }
