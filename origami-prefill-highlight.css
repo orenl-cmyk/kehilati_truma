@@ -1,34 +1,49 @@
 /* =====================================
-   Empty field hint – enhanced
+   Empty field – strong but clean highlight
    ===================================== */
 
-/* רקע לשדה עצמו */
-.field[data-empty="1"] {
-  background: rgba(220, 53, 69, 0.10);
-  border-radius: 8px;
-  padding: 6px;
+/* כל הבלוק של השדה */
+.form_data_element_wrap:has(.field[data-empty="1"]) {
+  background: rgba(220, 53, 69, 0.12); /* יותר נוכחות */
+  border-radius: 12px;
+  padding: 12px 12px 14px;
+  transition: background 0.25s ease;
 }
 
-/* מסגרת פנימית */
-.field[data-empty="1"] input,
-.field[data-empty="1"] textarea,
-.field[data-empty="1"] select,
-.field[data-empty="1"] .select2-choice {
+/* שם השדה */
+.form_data_element_wrap:has(.field[data-empty="1"]) .field_name {
+  background: rgba(220, 53, 69, 0.18);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+}
+
+/* השדה עצמו – חיזוק עדין */
+.form_data_element_wrap:has(.field[data-empty="1"]) .field {
+  background: rgba(220, 53, 69, 0.08);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* מסגרות פנימיות */
+.form_data_element_wrap:has(.field[data-empty="1"])
+  input,
+.form_data_element_wrap:has(.field[data-empty="1"])
+  textarea,
+.form_data_element_wrap:has(.field[data-empty="1"])
+  select,
+.form_data_element_wrap:has(.field[data-empty="1"])
+  .select2-choice {
   border-color: rgba(220, 53, 69, 0.55);
 }
 
-/* רקע עדין לשם השדה */
-.form_data_element_wrap:has(.field[data-empty="1"]) .field_name {
-  background: rgba(220, 53, 69, 0.08);
-  border-radius: 6px;
-  padding: 4px 8px;
-}
-
-/* ניקוי כשהשדה מלא */
-.field[data-empty="0"] {
+/* ניקוי מוחלט כשהשדה מלא */
+.form_data_element_wrap:has(.field[data-empty="0"]) {
   background: none;
+  padding: initial;
 }
 
-.form_data_element_wrap:has(.field[data-empty="0"]) .field_name {
+.form_data_element_wrap:has(.field[data-empty="0"]) .field_name,
+.form_data_element_wrap:has(.field[data-empty="0"]) .field {
   background: none;
 }
