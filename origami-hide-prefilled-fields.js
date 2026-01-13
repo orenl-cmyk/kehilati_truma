@@ -1,63 +1,56 @@
 /**
- * Origami Web Form – Hide Prefilled Fields (One-Time Only)
- * --------------------------------------------------------
- * ✔ מחביא שדות שמגיעים עם ערך בטעינה הראשונית בלבד
- * ✔ לא מאזין לשינויים – מה שהמשתמש ממלא לא נעלם
- * ✔ עובד עם input / textarea / select
- * ✔ בטוח ל־prefill מ־URL / API / חישוב / autofill
- *
- * שימוש:
- * 1. העלה ל-GitHub (Raw)
- * 2. הוסף כ-JS חיצוני בטופס Origami
+ * Origami – Hide Prefilled Fields (REAL hide, one-time)
+ * ---------------------------------------------------
+ * ✔ מסתיר את כל בלוק השדה (label + input)
+ * ✔ תומך: טקסט, מייל, טלפון, קובץ, חתימה
+ * ✔ רץ פעם אחת בלבד – לפני הצגת הטופס
+ * ✔ מה שהמשתמש ממלא – לא נעלם
  */
 
 (function () {
 
+  function fieldHasValue(wrapper) {
+    if (!wrapper) return false;
+
+    // 1. input / textarea / select עם value
+    const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
+    if (input && input.value && input.value.trim() !== '') {
+      return true;
+    }
+
+    // 2. קובץ – יש לינק לקובץ
+    if (wrapper.querySelector('.files a')) {
+      return true;
+    }
+
+    // 3. חתימה – יש תמונה
+    if (wrapper.querySelector('.signature-field-container img')) {
+      return true;
+    }
+
+    return false;
+  }
+
   function hidePrefilledFields() {
     try {
-      document.querySelectorAll('input, textarea, select').forEach(field => {
-
-        // דילוג על שדות שלא רלוונטיים
-        if (
-          field.type === 'hidden' ||
-          field.type === 'submit' ||
-          field.disabled
-        ) return;
-
-        let hasValue = false;
-
-        if (field.type === 'checkbox' || field.type === 'radio') {
-          hasValue = field.checked;
-        } else {
-          hasValue = field.value && field.value.trim() !== '';
-        }
-
-        if (!hasValue) return;
-
-        // ניסיון למצוא קונטיינר של שדה (Origami-friendly)
-        const wrapper =
-          field.closest('.form-group') ||
-          field.closest('.origami-field') ||
-          field.closest('[data-field-id]') ||
-          field.parentElement;
-
-        if (wrapper) {
-          wrapper.style.display = 'none';
-        }
-
-      });
+      document
+        .querySelectorAll('.form_data_element_wrap')
+        .forEach(wrapper => {
+          if (fieldHasValue(wrapper)) {
+            wrapper.style.display = 'none';
+          }
+        });
     } catch (e) {
       console.warn('Origami hide-prefilled-fields error:', e);
     } finally {
-      // מציג את הטופס אחרי סיום הריצה
       document.body.style.visibility = 'visible';
     }
   }
 
-  // הסתרת הטופס עד סיום הריצה (למניעת קפיצות)
+  // הסתרה זמנית – למניעת "קפיצה"
   document.body.style.visibility = 'hidden';
 
-  // Origami נטען דינמית – ממתינים רגע
+  // Origami נטען דינמית
   if (document.readyState === 'complete') {
     setTimeout(hidePrefilledFields, 300);
   } else {
