@@ -1,54 +1,32 @@
-/* =====================================
-   Empty field – full visual emphasis
-   works with inline-block grid
-   ===================================== */
+/* ===== Empty field highlight (stronger, same mechanism) ===== */
 
-.form_data_element_wrap {
-  position: relative;
-}
-
-/* שכבת רקע אמיתית */
-.form_data_element_wrap:has(.field[data-empty="1"])::before {
-  content: "";
-  position: absolute;
-  inset: 0;                 /* תופס את כל הבלוק */
-  background: rgba(220, 53, 69, 0.14);
-  border-radius: 14px;
-  z-index: 0;
-}
-
-/* שם השדה */
-.form_data_element_wrap:has(.field[data-empty="1"]) .field_name {
-  background: rgba(220, 53, 69, 0.22);
-  border-radius: 10px;
+/* צובע גם את שם השדה */
+.form_data_element_wrap.empty-field .field_name {
+  background: rgba(220, 53, 69, 0.12);
+  border-radius: 8px;
   padding: 6px 10px;
   margin-bottom: 6px;
-  position: relative;
-  z-index: 1;
 }
 
-/* השדה עצמו */
-.form_data_element_wrap:has(.field[data-empty="1"]) .field {
-  background: rgba(220, 53, 69, 0.10);
+/* עוטף את השדה עצמו */
+.form_data_element_wrap.empty-field .field {
+  background: rgba(220, 53, 69, 0.14);
   border-radius: 10px;
   padding: 10px;
-  position: relative;
-  z-index: 1;
 }
 
-/* מסגרות פנימיות */
-.form_data_element_wrap:has(.field[data-empty="1"])
-  input,
-.form_data_element_wrap:has(.field[data-empty="1"])
-  textarea,
-.form_data_element_wrap:has(.field[data-empty="1"])
-  select,
-.form_data_element_wrap:has(.field[data-empty="1"])
-  .select2-choice {
-  border-color: rgba(220, 53, 69, 0.6);
+/* קלטים פנימיים */
+.form_data_element_wrap.empty-field input,
+.form_data_element_wrap.empty-field textarea,
+.form_data_element_wrap.empty-field select,
+.form_data_element_wrap.empty-field .select2-choice {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(220, 53, 69, 0.55);
 }
 
-/* ניקוי כשמלא */
-.form_data_element_wrap:has(.field[data-empty="0"])::before {
-  content: none;
+/* בונוס: מסגרת עדינה לכל הבלוק (לא חובה) */
+.form_data_element_wrap.empty-field {
+  outline: 1px solid rgba(220, 53, 69, 0.25);
+  outline-offset: 3px;
+  border-radius: 12px;
 }
