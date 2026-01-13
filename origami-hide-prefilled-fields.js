@@ -1,12 +1,3 @@
-/**
- * Kehilati – Prefill Highlight + Auto Hide
- * ---------------------------------------
- * ✔ שדות ריקים → מודגשים (CSS)
- * ✔ מילוי → הוספה ל ?hidden=
- * ✔ רענון שקט
- * ✔ עובד עם כל סוג שדה
- */
-
 (function () {
 
   function getHiddenSet() {
@@ -30,7 +21,7 @@
     return false;
   }
 
-  function enhanceFields() {
+  function enhance() {
     const hiddenSet = getHiddenSet();
 
     document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
@@ -38,13 +29,10 @@
       if (!fld || hiddenSet.has(fld)) return;
 
       if (!hasValue(wrapper)) {
-        // הדגשה
         wrapper.classList.add('prefill-highlight');
 
-        const onComplete = () => {
+        const complete = () => {
           if (!hasValue(wrapper)) return;
-
-          wrapper.classList.remove('prefill-highlight');
 
           const url = new URL(window.location.href);
           const current = new Set(
@@ -56,15 +44,14 @@
           window.location.replace(url.toString());
         };
 
-        // מאזינים רק לשדה עצמו
-        wrapper.addEventListener('change', onComplete, { once: true });
-        wrapper.addEventListener('blur', onComplete, { once: true });
+        wrapper.addEventListener('change', complete, { once: true });
+        wrapper.addEventListener('blur', complete, { once: true });
       }
     });
   }
 
   window.addEventListener('load', () => {
-    setTimeout(enhanceFields, 200);
+    setTimeout(enhance, 200);
   }, { once: true });
 
 })();
