@@ -1,91 +1,98 @@
 /**
- * Origami – Empty Fields Highlight (FINAL, stable)
- * ------------------------------------------------
- * ✔ מסמן שדות ריקים באדום עדין
- * ✔ מסיר אדום מיד כשמתמלא
- * ✔ תומך Select2 (Selection + Relation)
+ * Origami – Empty Fields Highlight (FIELD-based, FINAL)
+ * ----------------------------------------------------
+ * ✔ עובד על .field (לא wrapper משתנה)
+ * ✔ Selection / Relation (Select2) מזוהים נכון
+ * ✔ Time fields מזוהים לפי value אמיתי
  * ✔ Checkbox מחוץ למשוואה
- * ✔ File / Signature נתמכים
- * ✔ עובד גם עם שינויים דינמיים
+ * ✔ הצבע יורד מיד כשיש ערך
  */
 
 (function () {
 
-  function hasValue(wrapper) {
+  const EMPTY_TEXTS = ["", "-", "בחר", "- בחר -", "בחר...", "נא לבחור"];
 
-    // 0. Checkbox – תמיד תקין
-    if (wrapper.querySelector('input[type=checkbox]')) {
+  function norm(t) {
+    return (t || "").trim();
+  }
+
+  function isEmptyText(t) {
+    return EMPTY_TEXTS.includes(norm(t));
+  }
+
+  function hasValue(field) {
+
+    /* 0. Checkbox – תמיד תקין */
+    if (field.querySelector('input[type=checkbox]')) {
       return true;
     }
 
-    // 1. Select2 (Selection + Relation)
-    const select2Chosen = wrapper.querySelector('.select2-chosen');
-    if (select2Chosen && select2Chosen.textContent.trim() !== '') {
+    /* 1. Select / Select2 (Selection + Relation) */
+    const select = field.querySelector('select[name^="fld_"]');
+    if (select) {
+      return !isEmptyText(select.value);
+    }
+
+    const chosen = field.querySelector('.select2-chosen');
+    if (chosen) {
+      return !isEmptyText(chosen.textContent);
+    }
+
+    /* 2. Radio */
+    if (field.querySelector('input[type=radio]:checked')) {
       return true;
     }
 
-    // 2. Select רגיל
-    const select = wrapper.querySelector('select');
-    if (select && select.value && select.value !== '') {
-      return true;
-    }
-
-    // 3. Radio
-    if (wrapper.querySelector('input[type=radio]:checked')) {
-      return true;
-    }
-
-    // 4. Input / Textarea רגיל
-    const input = wrapper.querySelector(
-      'input:not([type=hidden]):not([type=checkbox]):not(.select2-offscreen), textarea'
+    /* 3. Time / Date / Text inputs */
+    const input = field.querySelector(
+      'input[name^="fld_"]:not([type=hidden]):not(.select2-offscreen), textarea'
     );
-    if (input && input.value && input.value.trim() !== '') {
+    if (input && norm(input.value) !== "") {
       return true;
     }
 
-    // 5. קובץ
-    if (wrapper.querySelector('.files a')) {
+    /* 4. File */
+    if (field.querySelector('.files a')) {
       return true;
     }
 
-    // 6. חתימה
-    if (wrapper.querySelector('.signature-field-container img')) {
+    /* 5. Signature */
+    if (field.querySelector('.signature-field-container img')) {
       return true;
     }
 
     return false;
   }
 
-  function updateWrapper(wrapper) {
-    if (hasValue(wrapper)) {
-      wrapper.classList.remove('empty-field');
+  function update(field) {
+    if (hasValue(field)) {
+      field.classList.remove('empty-field');
     } else {
-      wrapper.classList.add('empty-field');
+      field.classList.add('empty-field');
     }
   }
 
-  function bind(wrapper) {
-    // בדיקה ראשונית
-    updateWrapper(wrapper);
+  function bind(field) {
+    update(field);
 
-    // האזנה לאירועים רגילים
-    wrapper.addEventListener('change', () => updateWrapper(wrapper));
-    wrapper.addEventListener('input', () => updateWrapper(wrapper));
+    const handler = () => update(field);
 
-    // Select2 / Angular לפעמים לא יורים אירוע → polling עדין
-    let checks = 0;
-    const interval = setInterval(() => {
-      updateWrapper(wrapper);
-      checks++;
-      if (checks > 20) clearInterval(interval); // ~3 שניות וזהו
+    field.addEventListener('change', handler);
+    field.addEventListener('input', handler);
+    field.addEventListener('blur', handler, true);
+
+    // Select2 / Angular – ריענון קצר
+    let i = 0;
+    const t = setInterval(() => {
+      update(field);
+      if (++i > 20) clearInterval(t);
     }, 150);
   }
 
   function init() {
-    document.querySelectorAll('.form_data_element_wrap').forEach(bind);
+    document.querySelectorAll('.field[class*="fld_"]').forEach(bind);
   }
 
-  // מחכים ל־Origami + Angular
   window.addEventListener('load', () => {
     setTimeout(init, 300);
   }, { once: true });
