@@ -1,3 +1,5 @@
+alert('EMPTY HINT JS RUNNING');
+
 (function () {
 
   const PLACEHOLDER_TEXTS = ['- בחר -'];
