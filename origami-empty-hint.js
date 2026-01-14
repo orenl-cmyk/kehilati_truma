@@ -1,5 +1,3 @@
-alert('EMPTY HINT JS RUNNING');
-
 (function () {
 
   const PLACEHOLDER_TEXTS = ['- בחר -'];
@@ -57,13 +55,11 @@ alert('EMPTY HINT JS RUNNING');
   }
 
   function scan() {
-    document.querySelectorAll('.field[class*="fld_"]').forEach(field => {
+    document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
+      const field = wrapper.querySelector('.field[class*="fld_"]');
+      if (!field) return;
+
       const isEmpty = isEmptyField(field);
-      field.dataset.empty = isEmpty ? '1' : '0';
-
-      const wrapper = field.closest('.form_data_element_wrap');
-      if (!wrapper) return;
-
       wrapper.classList.toggle('empty-field', isEmpty);
     });
   }
