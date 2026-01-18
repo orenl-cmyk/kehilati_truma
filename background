@@ -1,0 +1,18 @@
+body {
+  background: #0d6efd !important;
+}
+
+/* הקונטיינר של הטופס */
+.form_wrapper,
+.webform_wrapper,
+.mainbody {
+  background: transparent !important;
+}
+
+/* גוף הטופס עצמו */
+.form_container,
+.form_container_inner {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
