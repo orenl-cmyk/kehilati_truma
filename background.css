@@ -1,18 +1,78 @@
-body {
-  background: #0d6efd !important;
+/* =========================================================
+   Origami Webform – Custom Background Theme
+   מותאם למבנה entity / step-app / content-box
+   ========================================================= */
+
+/* ---------- רקע כללי מאחורי הטופס ---------- */
+#entity-container {
+  background: linear-gradient(
+    135deg,
+    rgba(13, 110, 253, 0.15),
+    rgba(32, 201, 151, 0.12)
+  ) !important;
+
+  min-height: 100vh;
+  padding-bottom: 40px;
 }
 
-/* הקונטיינר של הטופס */
-.form_wrapper,
-.webform_wrapper,
-.mainbody {
+/* ---------- נטרול רקעים פנימיים שחוסמים ---------- */
+.step-app-container,
+.step-app,
+.step-content,
+.step-tab-panel,
+.field_group {
   background: transparent !important;
 }
 
-/* גוף הטופס עצמו */
-.form_container,
-.form_container_inner {
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+/* ---------- קופסאות תוכן (header / footer / קבוצות) ---------- */
+.content-box,
+.field_group_body {
+  background: #ffffff !important;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ריווח יפה בין קבוצות */
+.field_group_body {
+  margin-bottom: 16px;
+}
+
+/* ---------- כותרות קבוצות ---------- */
+.field_group_name_header {
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+/* ---------- אזור header / footer של עמוד ---------- */
+.pre-content,
+.post-content {
+  text-align: center;
+}
+
+/* ---------- כפתור שליחה ---------- */
+.btn-final-submit,
+.btn-success {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.btn-final-submit:hover,
+.btn-success:hover {
+  background-color: #0a58ca !important;
+  border-color: #0a58ca !important;
+}
+
+/* ---------- התאמה למובייל ---------- */
+@media (max-width: 768px) {
+  #entity-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .content-box,
+  .field_group_body {
+    border-radius: 10px;
+  }
 }
