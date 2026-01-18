@@ -1,81 +1,95 @@
 /* =========================================================
-   Origami Webform – CLEAN / EMBED FRIENDLY THEME
-   מטרות:
-   ✔ הסרת רקע ומסגרות של אוריגמי
-   ✔ שליטה מלאה דרך קונטיינר פנימי
-   ✔ התאמה להטמעה (iframe / site embed)
+   Origami Webform – SMART CLEAN THEME
+   ✔ בלי שוליים בצדדים
+   ✔ בלי פס למעלה
+   ✔ גרדיאנט בגובה הטופס בלבד
    ========================================================= */
 
 
 /* =========================================================
-   1. HARD RESET – מעטפת עליונה של אוריגמי
+   1. איפוס מוחלט של מעטפת אוריגמי
    ========================================================= */
 
 html,
-body,
-body.mainbody {
-  background: transparent !important;
+html body,
+body.mainbody,
+body.mainbody.ng-scope {
   margin: 0 !important;
   padding: 0 !important;
+
   width: 100% !important;
   max-width: 100% !important;
+
+  background: transparent !important;
+  background-color: transparent !important;
+
   overflow-x: hidden !important;
 }
 
-/* לפעמים יש עטיפה ראשית מיד אחרי body */
-.mainbody > div:first-child {
-  background: transparent !important;
+/* ביטול עטיפה ראשונה אם קיימת */
+body.mainbody > div:first-child {
   margin: 0 !important;
   padding: 0 !important;
+  background: transparent !important;
 }
 
 
 /* =========================================================
-   2. נטרול מוחלט של גבולות / הילות / צללים
+   2. ביטול רווחים אוטומטיים של Bootstrap / Origami
    ========================================================= */
 
-.mainbody *,
-.mainbody *::before,
-.mainbody *::after {
-  box-shadow: none !important;
-  outline: none !important;
-  background-image: none !important;
+.entity.container-fluid,
+.entity.container-fluid.py-3 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
 }
 
 
 /* =========================================================
-   3. רקע כללי שאתה כן שולט בו (מאחורי הטופס)
+   3. קונטיינר הטופס – גובה טבעי בלבד
    ========================================================= */
 
 #entity-container {
+  min-height: auto !important;
+  height: auto !important;
+
+  margin: 0 auto !important;
+  padding: 0 !important;
+
+  background: none !important;
+}
+
+
+/* =========================================================
+   4. הגרדיאנט החכם – יושב רק על הטופס
+   ========================================================= */
+
+.step-app {
   background: linear-gradient(
     135deg,
     rgba(13, 110, 253, 0.12),
     rgba(32, 201, 151, 0.10)
-  ) !important;
+  );
 
-  min-height: 100vh;
-  padding: 24px 0 40px;
+  padding-bottom: 40px; /* נשימה בסוף הטופס */
 }
 
 
 /* =========================================================
-   4. נטרול רקעים פנימיים חוסמים
+   5. ניקוי שכבות פנימיות שחוסמות עיצוב
    ========================================================= */
 
 .step-app-container,
-.step-app,
 .step-content,
 .step-tab-panel,
-.field_group,
-.bg-white {
+.field_group {
   background: transparent !important;
-  border: none !important;
 }
 
 
 /* =========================================================
-   5. קופסאות תוכן (קבוצות / header / footer)
+   6. קופסאות תוכן (header / footer / קבוצות)
    ========================================================= */
 
 .content-box,
@@ -84,29 +98,18 @@ body.mainbody {
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 16px;
+
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
 
 
 /* =========================================================
-   6. כותרות קבוצות
+   7. כותרות קבוצות
    ========================================================= */
 
 .field_group_name_header {
-  color: #0d6efd;
   font-weight: 700;
-  margin-bottom: 12px;
-}
-
-
-/* =========================================================
-   7. אזור pre / post content
-   ========================================================= */
-
-.pre-content,
-.post-content {
-  background: transparent !important;
-  text-align: center;
+  color: #0d6efd;
 }
 
 
@@ -118,9 +121,9 @@ body.mainbody {
 .btn-success {
   background-color: #0d6efd !important;
   border-color: #0d6efd !important;
+
   font-weight: 600;
   border-radius: 10px;
-  padding: 10px 20px;
 }
 
 .btn-final-submit:hover,
@@ -131,14 +134,14 @@ body.mainbody {
 
 
 /* =========================================================
-   9. תיקון שוליים מוזרים של אוריגמי
+   9. ניקוי הילות / גבולות מיותרים
    ========================================================= */
 
-.step-tab-panel,
-.step-content,
-.content-box {
-  margin-left: auto !important;
-  margin-right: auto !important;
+.mainbody *,
+.mainbody *::before,
+.mainbody *::after {
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 
@@ -147,11 +150,6 @@ body.mainbody {
    ========================================================= */
 
 @media (max-width: 768px) {
-  #entity-container {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
   .content-box,
   .field_group_body {
     border-radius: 10px;
