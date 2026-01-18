@@ -76,3 +76,33 @@
     border-radius: 10px;
   }
 }
+/* =========================================
+   Remove Origami default blue borders / glow
+   ========================================= */
+
+/* קופסאות תוכן */
+.content-box,
+.field_group_body,
+.step-tab-panel,
+.step-content,
+.bg-white {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* אם יש פס דרך pseudo-element */
+.content-box::before,
+.content-box::after,
+.field_group_body::before,
+.field_group_body::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* לפעמים זה יושב על row */
+.field_group_body.row {
+  box-shadow: none !important;
+  background-image: none !important;
+}
