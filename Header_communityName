@@ -1,0 +1,13 @@
+<script>
+  function injectCommunityName() {
+    document.querySelectorAll('[data-dynamic]').forEach(el => {
+      const fld = el.getAttribute('data-dynamic');
+      const input = document.querySelector(`[name="${fld}"]`);
+      if (input && input.value) {
+        el.textContent = input.value;
+      }
+    });
+  }
+
+  setTimeout(injectCommunityName, 300);
+</script>
