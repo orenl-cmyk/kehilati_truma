@@ -1,6 +1,7 @@
-/* ===== Empty field highlight (stronger, same mechanism) ===== */
+/* =========================================
+   Empty field highlight
+========================================= */
 
-/* צובע גם את שם השדה */
 .form_data_element_wrap.empty-field .field_name {
   background: rgba(220, 53, 69, 0.12);
   border-radius: 8px;
@@ -8,14 +9,12 @@
   margin-bottom: 6px;
 }
 
-/* עוטף את השדה עצמו */
 .form_data_element_wrap.empty-field .field {
   background: rgba(220, 53, 69, 0.14);
   border-radius: 10px;
   padding: 10px;
 }
 
-/* קלטים פנימיים */
 .form_data_element_wrap.empty-field input,
 .form_data_element_wrap.empty-field textarea,
 .form_data_element_wrap.empty-field select,
@@ -24,9 +23,54 @@
   border: 1px solid rgba(220, 53, 69, 0.55);
 }
 
-/* בונוס: מסגרת עדינה לכל הבלוק (לא חובה) */
 .form_data_element_wrap.empty-field {
   outline: 1px solid rgba(220, 53, 69, 0.25);
   outline-offset: 3px;
   border-radius: 12px;
+}
+
+/* =========================================
+   Jump highlight animation
+========================================= */
+
+.jump-highlight {
+  animation: jumpFlash 1.5s ease;
+}
+
+@keyframes jumpFlash {
+  0% { box-shadow: 0 0 0 0 rgba(220,53,69,0.6); }
+  50% { box-shadow: 0 0 0 12px rgba(220,53,69,0); }
+  100% { box-shadow: 0 0 0 0 rgba(220,53,69,0); }
+}
+
+/* =========================================
+   Top banner
+========================================= */
+
+#empty-banner {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: #dc3545;
+  color: white;
+  padding: 10px 14px;
+  font-weight: bold;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+#empty-banner button {
+  background: white;
+  color: #dc3545;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#empty-banner button:hover {
+  opacity: 0.9;
 }
