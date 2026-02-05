@@ -1,36 +1,38 @@
 (function () {
 
+  function isRealValue(v) {
+    if (!v) return false;
+    const val = v.trim();
+    return val !== "" && val !== "- בחר -";
+  }
+
   function hasValue(wrapper) {
 
     const field = wrapper.querySelector('.field');
     if (!field) return false;
 
     // === upload file ===
-    if (field.classList.contains('upload-files')) {
+    if (field.classList.contains('upload-files') ||
+        field.classList.contains('signature-field')) {
       return !!field.querySelector('.files a');
     }
 
-    // === signature ===
-    if (field.classList.contains('signature-field')) {
-      return !!field.querySelector('.files a');
+    // === כל ה־inputs ===
+    const inputs = field.querySelectorAll('input[type="text"], textarea');
+    for (const input of inputs) {
+      if (isRealValue(input.value)) return true;
     }
 
-    // === select2 / entity ===
-    if (field.querySelector('.select2-chosen')) {
-      const txt = field.querySelector('.select2-chosen').textContent.trim();
-      return txt !== "" && txt !== "- בחר -";
-    }
-
-    // === select רגיל ===
+    // === select אמיתי ===
     const select = field.querySelector('select');
-    if (select && select.value && select.value.trim() !== '') return true;
+    if (select && isRealValue(select.value)) return true;
 
-    // === input רגיל / שעה / טקסט ===
-    const input = field.querySelector('input[type="text"], textarea');
-    if (input && input.value && input.value.trim() !== '') return true;
+    // === select2 UI ===
+    const s2 = field.querySelector('.select2-chosen');
+    if (s2 && isRealValue(s2.textContent)) return true;
 
-    // === תמונה ===
-    if (field.querySelector('img[src*="file"]')) return true;
+    // === תמונה (preview / חתימה) ===
+    if (field.querySelector('img[src*="file"], canvas')) return true;
 
     return false;
   }
@@ -41,7 +43,7 @@
     });
   }
 
-  // Angular מחליף DOM → צריך polling
+  // Angular מחליף DOM → polling
   setInterval(scanAll, 400);
 
 })();
