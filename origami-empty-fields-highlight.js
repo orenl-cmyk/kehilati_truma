@@ -6,22 +6,29 @@
 
   function hasValue(wrapper) {
 
-    // === המקור שעבד — לא נוגעים ===
-    const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
-    if (input && isRealValue(input.value)) return true;
-
-    // === select2 ===
-    const s2 = wrapper.querySelector('.select2-chosen');
-    if (s2 && isRealValue(s2.textContent)) return true;
+    const field = wrapper.querySelector('.field');
+    if (!field) return false;
 
     // === upload file ===
-    if (wrapper.querySelector('.files a')) return true;
+    if (field.classList.contains('upload-files') ||
+        field.classList.contains('signature-field')) {
+      return !!field.querySelector('.files a');
+    }
 
-    // === signature ===
-    if (wrapper.querySelector('.signature-field-container img')) return true;
+    // === select2 ===
+    const s2 = field.querySelector('.select2-chosen');
+    if (s2 && isRealValue(s2.textContent)) return true;
 
-    // === image preview fallback ===
-    if (wrapper.querySelector('img[src*="file"], canvas')) return true;
+    // === select רגיל ===
+    const select = field.querySelector('select');
+    if (select && isRealValue(select.value)) return true;
+
+    // === input רגיל ===
+    const input = wrapper.querySelector('input:not([type=hidden]), textarea');
+    if (input && isRealValue(input.value)) return true;
+
+    // === תמונה ===
+    if (field.querySelector('img[src*="file"], canvas')) return true;
 
     return false;
   }
@@ -29,20 +36,16 @@
   function applyHighlight() {
     document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
 
-      if (!hasValue(wrapper)) {
-        wrapper.classList.add('empty-field');
-      } else {
-        wrapper.classList.remove('empty-field');
-      }
+      wrapper.classList.toggle('empty-field', !hasValue(wrapper));
 
-      // מאזינים כמו בקוד המקורי — זה מה שעבד
-      wrapper.addEventListener('input', () => {
+      // בדיוק כמו בקוד שעבד
+      wrapper.addEventListener('change', () => {
         if (hasValue(wrapper)) {
           wrapper.classList.remove('empty-field');
         }
       });
 
-      wrapper.addEventListener('change', () => {
+      wrapper.addEventListener('input', () => {
         if (hasValue(wrapper)) {
           wrapper.classList.remove('empty-field');
         }
