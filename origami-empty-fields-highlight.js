@@ -23,12 +23,9 @@
     const select = field.querySelector('select');
     if (select && isRealValue(select.value)) return true;
 
-    // input רגיל (שעה/טקסט)
+    // input רגיל / שעה
     const input = wrapper.querySelector('input:not([type=hidden]), textarea');
     if (input && isRealValue(input.value)) return true;
-
-    // תמונה
-    if (field.querySelector('img[src*="file"], canvas')) return true;
 
     return false;
   }
@@ -40,8 +37,8 @@
   }
 
   function bindListeners(wrapper) {
-    wrapper.addEventListener('change', () => applyHighlight());
-    wrapper.addEventListener('input', () => applyHighlight());
+    wrapper.addEventListener('input', applyHighlight);
+    wrapper.addEventListener('change', applyHighlight);
   }
 
   function init() {
@@ -49,13 +46,18 @@
     applyHighlight();
   }
 
-  // טעינה ראשונית
   window.addEventListener('load', () => {
     setTimeout(init, 200);
   }, { once: true });
 
-  // observer לשדות חדשים / חתימה / תנאי נראות
-  const observer = new MutationObserver(() => applyHighlight());
+  // 🔹 refresh אחרי כל click (תופס select2/time/signature)
+  document.addEventListener('click', applyHighlight, true);
+
+  // 🔹 observer לשדות דינמיים
+  const observer = new MutationObserver(applyHighlight);
   observer.observe(document.body, { childList: true, subtree: true });
+
+  // 🔹 fallback עדין
+  setInterval(applyHighlight, 300);
 
 })();
