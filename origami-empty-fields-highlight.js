@@ -5,20 +5,32 @@
     const field = wrapper.querySelector('.field');
     if (!field) return false;
 
-    // אם יש טקסט שהוזן
-    if (field.querySelector('input[value]:not([value=""]), textarea:not(:placeholder-shown)')) {
-      return true;
+    // === upload file ===
+    if (field.classList.contains('upload-files')) {
+      return !!field.querySelector('.files a');
     }
 
-    // select2
-    const s2 = field.querySelector('.select2-chosen');
-    if (s2 && s2.textContent.trim() !== '') return true;
+    // === signature ===
+    if (field.classList.contains('signature-field')) {
+      return !!field.querySelector('.files a');
+    }
 
-    // קובץ
-    if (field.querySelector('.files a')) return true;
+    // === select2 / entity ===
+    if (field.querySelector('.select2-chosen')) {
+      const txt = field.querySelector('.select2-chosen').textContent.trim();
+      return txt !== "" && txt !== "- בחר -";
+    }
 
-    // חתימה / תמונה
-    if (field.querySelector('img[src*="file"], canvas')) return true;
+    // === select רגיל ===
+    const select = field.querySelector('select');
+    if (select && select.value && select.value.trim() !== '') return true;
+
+    // === input רגיל / שעה / טקסט ===
+    const input = field.querySelector('input[type="text"], textarea');
+    if (input && input.value && input.value.trim() !== '') return true;
+
+    // === תמונה ===
+    if (field.querySelector('img[src*="file"]')) return true;
 
     return false;
   }
@@ -29,7 +41,7 @@
     });
   }
 
-  // ריצה חוזרת כל הזמן — כי Angular מחליף DOM
+  // Angular מחליף DOM → צריך polling
   setInterval(scanAll, 400);
 
 })();
