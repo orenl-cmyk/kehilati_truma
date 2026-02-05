@@ -6,11 +6,8 @@
 
   function hasValue(wrapper) {
 
-    // ✅ זה הקו שעבד — לא נוגעים בו
     const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
     if (input && isRealValue(input.value)) return true;
-
-    // רק אם לא נמצא input אמיתי — בדיקות נוספות
 
     const s2 = wrapper.querySelector('.select2-chosen');
     if (s2 && isRealValue(s2.textContent)) return true;
@@ -30,7 +27,23 @@
     });
   }
 
-  // להריץ כמה פעמים כי Angular נטען באיחור
+  // === רענון חכם ===
+  let scheduled = false;
+  function scheduleScan() {
+    if (scheduled) return;
+    scheduled = true;
+    setTimeout(() => {
+      applyHighlight();
+      scheduled = false;
+    }, 100);
+  }
+
+  // listeners גלובליים — לא על ה-wrapper
+  document.addEventListener('input', scheduleScan, true);
+  document.addEventListener('change', scheduleScan, true);
+  document.addEventListener('click', scheduleScan, true);
+
+  // טעינה ראשונית (Angular איטי)
   let tries = 0;
   const interval = setInterval(() => {
     applyHighlight();
