@@ -27,28 +27,16 @@
     });
   }
 
-  // === רענון חכם ===
-  let scheduled = false;
-  function scheduleScan() {
-    if (scheduled) return;
-    scheduled = true;
-    setTimeout(() => {
-      applyHighlight();
-      scheduled = false;
-    }, 100);
-  }
+  // === observer לשדות שמופיעים דינמית ===
+  const observer = new MutationObserver(() => applyHighlight());
+  observer.observe(document.body, { childList: true, subtree: true });
 
-  // listeners גלובליים — לא על ה-wrapper
-  document.addEventListener('input', scheduleScan, true);
-  document.addEventListener('change', scheduleScan, true);
-  document.addEventListener('click', scheduleScan, true);
+  // === polling עדין לשדות שמתעדכנים בלי events ===
+  setInterval(applyHighlight, 500);
 
-  // טעינה ראשונית (Angular איטי)
-  let tries = 0;
-  const interval = setInterval(() => {
-    applyHighlight();
-    tries++;
-    if (tries > 10) clearInterval(interval);
-  }, 200);
+  // === טעינה ראשונית ===
+  window.addEventListener('load', () => {
+    setTimeout(applyHighlight, 300);
+  });
 
 })();
