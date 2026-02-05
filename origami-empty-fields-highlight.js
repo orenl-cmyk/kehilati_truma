@@ -1,56 +1,58 @@
 (function () {
 
-  function readValue(el) {
-    return (
-      el.value ||
-      el.getAttribute("value") ||
-      el.defaultValue ||
-      ""
-    ).trim();
-  }
-
   function isRealValue(v) {
-    return v !== "" && v !== "- בחר -";
+    return v && v.trim() !== "" && v.trim() !== "- בחר -";
   }
 
   function hasValue(wrapper) {
 
-    const field = wrapper.querySelector('.field');
-    if (!field) return false;
+    // האינפוט האמיתי של אוריגמי — זה מה שעבד קודם
+    const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
+    if (input && isRealValue(input.value)) return true;
 
-    // === upload / signature ===
-    if (field.classList.contains('upload-files') ||
-        field.classList.contains('signature-field')) {
-      return !!field.querySelector('.files a');
-    }
-
-    // === כל inputs ===
-    const inputs = field.querySelectorAll('input, textarea');
-    for (const input of inputs) {
-      if (isRealValue(readValue(input))) return true;
-    }
-
-    // === select אמיתי ===
-    const select = field.querySelector('select');
-    if (select && isRealValue(readValue(select))) return true;
-
-    // === select2 ===
-    const s2 = field.querySelector('.select2-chosen');
+    // select2 (entity / list)
+    const s2 = wrapper.querySelector('.select2-chosen');
     if (s2 && isRealValue(s2.textContent)) return true;
 
-    // === תמונה ===
-    if (field.querySelector('img[src*="file"], canvas')) return true;
+    // קובץ
+    if (wrapper.querySelector('.files a')) return true;
+
+    // חתימה
+    if (wrapper.querySelector('.signature-field-container img')) return true;
+
+    // תמונה preview
+    if (wrapper.querySelector('img[src*="file"]')) return true;
 
     return false;
   }
 
-  function scanAll() {
+  function applyHighlight() {
     document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
-      wrapper.classList.toggle('empty-field', !hasValue(wrapper));
+
+      if (!hasValue(wrapper)) {
+        wrapper.classList.add('empty-field');
+      } else {
+        wrapper.classList.remove('empty-field');
+      }
+
+      // מאזין להסרת אדום בזמן שינוי
+      wrapper.addEventListener('input', () => {
+        if (hasValue(wrapper)) {
+          wrapper.classList.remove('empty-field');
+        }
+      });
+
+      wrapper.addEventListener('change', () => {
+        if (hasValue(wrapper)) {
+          wrapper.classList.remove('empty-field');
+        }
+      });
+
     });
   }
 
-  // ריצה מתמשכת בגלל Angular
-  setInterval(scanAll, 300);
+  window.addEventListener('load', () => {
+    setTimeout(applyHighlight, 200);
+  }, { once: true });
 
 })();
