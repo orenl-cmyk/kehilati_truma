@@ -1,9 +1,16 @@
 (function () {
 
+  function readValue(el) {
+    return (
+      el.value ||
+      el.getAttribute("value") ||
+      el.defaultValue ||
+      ""
+    ).trim();
+  }
+
   function isRealValue(v) {
-    if (!v) return false;
-    const val = v.trim();
-    return val !== "" && val !== "- בחר -";
+    return v !== "" && v !== "- בחר -";
   }
 
   function hasValue(wrapper) {
@@ -11,27 +18,27 @@
     const field = wrapper.querySelector('.field');
     if (!field) return false;
 
-    // === upload file ===
+    // === upload / signature ===
     if (field.classList.contains('upload-files') ||
         field.classList.contains('signature-field')) {
       return !!field.querySelector('.files a');
     }
 
-    // === כל ה־inputs ===
-    const inputs = field.querySelectorAll('input[type="text"], textarea');
+    // === כל inputs ===
+    const inputs = field.querySelectorAll('input, textarea');
     for (const input of inputs) {
-      if (isRealValue(input.value)) return true;
+      if (isRealValue(readValue(input))) return true;
     }
 
     // === select אמיתי ===
     const select = field.querySelector('select');
-    if (select && isRealValue(select.value)) return true;
+    if (select && isRealValue(readValue(select))) return true;
 
-    // === select2 UI ===
+    // === select2 ===
     const s2 = field.querySelector('.select2-chosen');
     if (s2 && isRealValue(s2.textContent)) return true;
 
-    // === תמונה (preview / חתימה) ===
+    // === תמונה ===
     if (field.querySelector('img[src*="file"], canvas')) return true;
 
     return false;
@@ -43,7 +50,7 @@
     });
   }
 
-  // Angular מחליף DOM → polling
-  setInterval(scanAll, 400);
+  // ריצה מתמשכת בגלל Angular
+  setInterval(scanAll, 300);
 
 })();
