@@ -1,9 +1,5 @@
 (function () {
 
-  /* =============================
-     Detect if field has value
-  ============================== */
-
   function hasValue(wrapper) {
     const inputs = wrapper.querySelectorAll('input:not([type=hidden]), textarea, select');
 
@@ -11,18 +7,14 @@
       if (input.value && input.value.trim() !== '') return true;
     }
 
-    // file upload
+    // קובץ
     if (wrapper.querySelector('.files a')) return true;
 
-    // signature
+    // חתימה
     if (wrapper.querySelector('.signature-field-container img')) return true;
 
     return false;
   }
-
-  /* =============================
-     Update empty class
-  ============================== */
 
   function updateWrapper(wrapper) {
     if (hasValue(wrapper)) {
@@ -43,67 +35,15 @@
       updateWrapper(wrapper);
       bind(wrapper);
     });
-    updateBanner();
   }
 
-  /* =============================
-     Banner logic
-  ============================== */
-
-  function firstEmptyField() {
-    return document.querySelector('.form_data_element_wrap.empty-field');
-  }
-
-  function scrollToEmpty() {
-    const target = firstEmptyField();
-    if (!target) return;
-
-    target.scrollIntoView({
-      behavior: 'smooth',
-      block: 'center'
-    });
-
-    target.classList.add('jump-highlight');
-    setTimeout(() => target.classList.remove('jump-highlight'), 1500);
-  }
-
-  function createBanner() {
-    if (document.getElementById('empty-banner')) return;
-
-    const banner = document.createElement('div');
-    banner.id = 'empty-banner';
-    banner.innerHTML = `
-      יש שדות חסרים בטופס
-      <button id="jump-btn">קפוץ לשדה הראשון</button>
-    `;
-
-    document.body.prepend(banner);
-
-    document.getElementById('jump-btn')
-      .addEventListener('click', scrollToEmpty);
-  }
-
-  function updateBanner() {
-    const banner = document.getElementById('empty-banner');
-    if (!banner) return;
-
-    if (firstEmptyField()) {
-      banner.style.display = 'flex';
-    } else {
-      banner.style.display = 'none';
-    }
-  }
-
-  /* =============================
-     Init
-  ============================== */
-
+  // ריצה ראשונית
   window.addEventListener('load', () => {
-    createBanner();
     setTimeout(scanAll, 300);
   });
 
-  const observer = new MutationObserver(scanAll);
+  // אם אוריגמי מרנדר מחדש שדות
+  const observer = new MutationObserver(() => scanAll());
   observer.observe(document.body, { childList: true, subtree: true });
 
 })();
