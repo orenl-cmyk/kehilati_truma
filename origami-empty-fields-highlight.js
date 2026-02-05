@@ -1,11 +1,38 @@
 (function () {
 
-  function hasValue(wrapper) {
-    const inputs = wrapper.querySelectorAll('input:not([type=hidden]), textarea, select');
+ function hasValue(wrapper) {
 
-    for (const input of inputs) {
-      if (input.value && input.value.trim() !== '') return true;
-    }
+  // קלטים רגילים
+  const inputs = wrapper.querySelectorAll('input:not([type=hidden]), textarea, select');
+  for (const input of inputs) {
+    if (input.value && input.value.trim() !== '') return true;
+  }
+
+  // hidden inputs (אוריגמי אוהב לשמור ערך שם)
+  const hidden = wrapper.querySelectorAll('input[type=hidden]');
+  for (const h of hidden) {
+    if (h.value && h.value.trim() !== '') return true;
+  }
+
+  // העלאת קבצים – כל לינק/preview
+  if (wrapper.querySelector('a[href*="file"], .files a, .uploaded-file, .file-preview')) {
+    return true;
+  }
+
+  // חתימה – תמונה / canvas
+  if (wrapper.querySelector('canvas, .signature img, .signature-field-container img')) {
+    return true;
+  }
+
+  // select2 / קומפוננטות JS
+  if (wrapper.querySelector('.select2-chosen, .select2-selection__rendered')) {
+    const txt = wrapper.querySelector('.select2-chosen, .select2-selection__rendered').textContent;
+    if (txt && txt.trim() !== '') return true;
+  }
+
+  return false;
+}
+
 
     // קובץ
     if (wrapper.querySelector('.files a')) return true;
