@@ -9,7 +9,7 @@
     const field = wrapper.querySelector('.field');
     if (!field) return false;
 
-    // upload / signature
+    // חתימה / קובץ
     if (field.classList.contains('upload-files') ||
         field.classList.contains('signature-field')) {
       return !!field.querySelector('.files a');
@@ -24,14 +24,14 @@
     if (select && isRealValue(select.value)) return true;
 
     // input רגיל / שעה
-    const input = wrapper.querySelector('input:not([type=hidden]), textarea');
+    const input = field.querySelector('input:not([type=hidden]), textarea');
     if (input && isRealValue(input.value)) return true;
 
     return false;
   }
 
   function applyHighlight() {
-    document.querySelectorAll('.form_data_element_wrap').forEach(wrapper => {
+    document.querySelectorAll('.field_name_wrapper').forEach(wrapper => {
       wrapper.classList.toggle('empty-field', !hasValue(wrapper));
     });
   }
@@ -39,10 +39,11 @@
   function bindListeners(wrapper) {
     wrapper.addEventListener('input', applyHighlight);
     wrapper.addEventListener('change', applyHighlight);
+    wrapper.addEventListener('click', applyHighlight);
   }
 
   function init() {
-    document.querySelectorAll('.form_data_element_wrap').forEach(bindListeners);
+    document.querySelectorAll('.field_name_wrapper').forEach(bindListeners);
     applyHighlight();
   }
 
@@ -50,14 +51,8 @@
     setTimeout(init, 200);
   }, { once: true });
 
-  // 🔹 refresh אחרי כל click (תופס select2/time/signature)
-  document.addEventListener('click', applyHighlight, true);
-
-  // 🔹 observer לשדות דינמיים
+  // שדות שמופיעים מתנאי נראות
   const observer = new MutationObserver(applyHighlight);
   observer.observe(document.body, { childList: true, subtree: true });
-
-  // 🔹 fallback עדין
-  setInterval(applyHighlight, 300);
 
 })();
