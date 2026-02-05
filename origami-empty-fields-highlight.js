@@ -6,11 +6,14 @@
 
   function hasValue(wrapper) {
 
+    // ✅ זה הקו שעבד — לא נוגעים בו
     const input = wrapper.querySelector('input:not([type=hidden]), textarea, select');
     if (input && isRealValue(input.value)) return true;
 
-    if (wrapper.querySelector('.select2-chosen') &&
-        isRealValue(wrapper.querySelector('.select2-chosen').textContent)) return true;
+    // רק אם לא נמצא input אמיתי — בדיקות נוספות
+
+    const s2 = wrapper.querySelector('.select2-chosen');
+    if (s2 && isRealValue(s2.textContent)) return true;
 
     if (wrapper.querySelector('.files a')) return true;
 
@@ -27,12 +30,12 @@
     });
   }
 
-  // ⬅️ הסוד: להריץ כמה פעמים עד שהטופס נטען באמת
+  // להריץ כמה פעמים כי Angular נטען באיחור
   let tries = 0;
   const interval = setInterval(() => {
     applyHighlight();
     tries++;
-    if (tries > 10) clearInterval(interval); // אחרי ~2 שניות מפסיק
+    if (tries > 10) clearInterval(interval);
   }, 200);
 
 })();
