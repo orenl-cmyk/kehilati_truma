@@ -5,26 +5,32 @@
     return url.searchParams.get(name);
   }
 
-  function injectHeader() {
-    let community = getParam("community");
+  function tryInject() {
+
+    const community = getParam("community");
     if (!community) return;
 
-    // ניקוי תווים מיותרים בתחילת הטקסט
-    community = community.replace(/^[.\s]+/, "");
+    const img = document.querySelector("img");
+    if (!img || document.getElementById("community-header")) return;
 
     const header = document.createElement("div");
+    header.id = "community-header";
     header.style.textAlign = "center";
     header.style.fontSize = "28px";
     header.style.fontWeight = "bold";
     header.style.marginTop = "10px";
     header.innerText = `רישום לקהילת ${community}`;
 
-    const img = document.querySelector("img");
-    if (img && img.parentElement) {
-      img.parentElement.appendChild(header);
-    }
+    img.parentElement.appendChild(header);
   }
 
-  injectHeader();
+  // מנסים כל 300ms עד שאוריגמי סיים לרנדר
+  const interval = setInterval(() => {
+    tryInject();
+
+    if (document.getElementById("community-header")) {
+      clearInterval(interval);
+    }
+  }, 300);
 
 })();
