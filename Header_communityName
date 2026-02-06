@@ -5,30 +5,24 @@
     return url.searchParams.get(name);
   }
 
-  function tryInject() {
-
+  function replaceText() {
     const community = getParam("community");
     if (!community) return;
 
-    const img = document.querySelector("img");
-    if (!img || document.getElementById("community-header")) return;
+    const spans = document.querySelectorAll("span");
 
-    const header = document.createElement("div");
-    header.id = "community-header";
-    header.style.textAlign = "center";
-    header.style.fontSize = "28px";
-    header.style.fontWeight = "bold";
-    header.style.marginTop = "10px";
-    header.innerText = `רישום לקהילת ${community}`;
-
-    img.parentElement.appendChild(header);
+    spans.forEach(span => {
+      if (span.innerText.includes("רישום לקהילת -")) {
+        span.innerText = `רישום לקהילת ${community}`;
+      }
+    });
   }
 
-  // מנסים כל 300ms עד שאוריגמי סיים לרנדר
+  // Origami מרנדר מאוחר → ננסה כמה פעמים
   const interval = setInterval(() => {
-    tryInject();
+    replaceText();
 
-    if (document.getElementById("community-header")) {
+    if (document.body.innerText.includes(getParam("community"))) {
       clearInterval(interval);
     }
   }, 300);
