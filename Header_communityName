@@ -1,13 +1,48 @@
-<script>
-  function injectCommunityName() {
-    document.querySelectorAll('[data-dynamic]').forEach(el => {
-      const fld = el.getAttribute('data-dynamic');
-      const input = document.querySelector(`[name="${fld}"]`);
-      if (input && input.value) {
-        el.textContent = input.value;
+(function () {
+
+  const FIELD_NAME = "fld_1764";
+
+  function waitForField(callback) {
+    const observer = new MutationObserver(() => {
+      const field = document.querySelector(`[data-field-name="${FIELD_NAME}"] input`);
+      if (field) {
+        observer.disconnect();
+        callback(field);
       }
     });
+
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  setTimeout(injectCommunityName, 300);
-</script>
+  function injectHeader(field) {
+
+    let headerContainer = document.getElementById("community-header");
+
+    if (!headerContainer) {
+      headerContainer = document.createElement("div");
+      headerContainer.id = "community-header";
+      headerContainer.style.textAlign = "center";
+      headerContainer.style.fontSize = "28px";
+      headerContainer.style.fontWeight = "bold";
+      headerContainer.style.marginTop = "10px";
+
+      const img = document.querySelector('img');
+      if (img && img.parentElement) {
+        img.parentElement.appendChild(headerContainer);
+      }
+    }
+
+    function updateText() {
+      const value = field.value || "";
+      headerContainer.innerText = value
+        ? `רישום לקהילת ${value}`
+        : "";
+    }
+
+    updateText();
+    field.addEventListener("input", updateText);
+  }
+
+  waitForField(injectHeader);
+
+})();
