@@ -5,25 +5,39 @@
     return url.searchParams.get(name);
   }
 
-  function replaceHeader() {
+  function injectHeader() {
 
     const community = getParam("community");
     if (!community) return;
 
-    const headers = document.querySelectorAll('span[style*="24pt"]');
+    if (document.getElementById("community-header")) return;
 
-    headers.forEach(el => {
-      if (el.innerText.includes("רישום לקהילת")) {
-        el.innerText = `רישום לקהילת ${community}`;
-      }
-    });
+    const header = document.createElement("div");
+    header.id = "community-header";
+
+    header.innerText = `רישום לקהילת ${community}`;
+
+    // 🎨 עיצוב
+    header.style.textAlign = "center";
+    header.style.fontSize = "32px";          // גדול יותר
+    header.style.fontWeight = "bold";
+    header.style.color = "#1f5fa8";          // כחול כהה
+    header.style.marginTop = "10px";
+    header.style.marginBottom = "10px";
+    header.style.fontFamily = "'Trebuchet MS', sans-serif";
+
+    // נשתול אחרי התמונה
+    const img = document.querySelector("img");
+    if (img && img.parentElement) {
+      img.parentElement.appendChild(header);
+    }
   }
 
-  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
+  // Origami מרנדר מאוחר
   const interval = setInterval(() => {
-    replaceHeader();
+    injectHeader();
 
-    if (document.body.innerText.includes(getParam("community"))) {
+    if (document.getElementById("community-header")) {
       clearInterval(interval);
     }
   }, 300);
