@@ -5,39 +5,25 @@
     return url.searchParams.get(name);
   }
 
-  function injectHeader() {
+  function replaceHeader() {
 
     const community = getParam("community");
     if (!community) return;
 
-    if (document.getElementById("community-header")) return;
+    const headers = document.querySelectorAll('span[style*="32pt"]');
 
-    // הקונטיינר הראשי של אוריגמי
-    const container =
-      document.querySelector("#entity-container") ||
-      document.querySelector(".step-content") ||
-      document.body;
-
-    if (!container) return;
-
-    const header = document.createElement("div");
-    header.id = "community-header";
-    header.innerText = `רישום לקהילת ${community}`;
-
-    header.style.textAlign = "center";
-    header.style.fontSize = "32px";
-    header.style.fontWeight = "bold";
-    header.style.color = "#1f5fa8";
-    header.style.margin = "10px 0";
-    header.style.fontFamily = "'Trebuchet MS', sans-serif";
-
-    container.prepend(header);
+    headers.forEach(el => {
+      if (el.innerText.includes("רישום לקהילת")) {
+        el.innerText = `רישום לקהילת ${community}`;
+      }
+    });
   }
 
+  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
   const interval = setInterval(() => {
-    injectHeader();
+    replaceHeader();
 
-    if (document.getElementById("community-header")) {
+    if (document.body.innerText.includes(getParam("community"))) {
       clearInterval(interval);
     }
   }, 300);
