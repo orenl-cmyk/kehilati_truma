@@ -5,22 +5,23 @@
     return url.searchParams.get(name);
   }
 
-  function replaceText() {
+  function replaceHeader() {
+
     const community = getParam("community");
     if (!community) return;
 
-    const spans = document.querySelectorAll("span");
+    const headers = document.querySelectorAll('span[style*="24pt"]');
 
-    spans.forEach(span => {
-      if (span.innerText.includes("רישום לקהילת -")) {
-        span.innerText = `רישום לקהילת ${community}`;
+    headers.forEach(el => {
+      if (el.innerText.includes("רישום לקהילת")) {
+        el.innerText = `רישום לקהילת ${community}`;
       }
     });
   }
 
-  // Origami מרנדר מאוחר → ננסה כמה פעמים
+  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
   const interval = setInterval(() => {
-    replaceText();
+    replaceHeader();
 
     if (document.body.innerText.includes(getParam("community"))) {
       clearInterval(interval);
