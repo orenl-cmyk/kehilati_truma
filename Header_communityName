@@ -1,42 +1,51 @@
 (function () {
-
-  function getParam(name) {
-    const url = new URL(window.location.href);
-    const v = url.searchParams.get(name);
-    return v ? decodeURIComponent(v) : "";
+  // 1) קח את community מה-URL
+  const community = decodeURIComponent(
+    new URL(window.location.href).searchParams.get("community") || ""
+  );
+  if (!community) {
+    console.log("No community param");
+    return;
   }
 
-  const community = getParam("community");
-  if (!community) return;
+  // 2) פונקציה שמוודאת שהכותרת קיימת תמיד
+  function ensureTitle() {
+    const pre = document.querySelector(".pre-content");
+    if (!pre) return;
 
-  const watcher = setInterval(() => {
+    // הכי חשוב: לשתול בתוך אותו content-box (ולא סתם אחרי pre-content)
+    const box = pre.closest(".content-box");
+    if (!box) return;
 
-    const frame = document.querySelector("iframe");
-    if (!frame || !frame.contentDocument) return;
+    // אם כבר קיים בתוך box - לא להוסיף שוב
+    if (box.querySelector("#communityTitle")) return;
 
-    const doc = frame.contentDocument;
-    const container = doc.querySelector(".pre-content");
-
-    if (!container) return;
-
-    // לא להוסיף פעמיים
-    if (doc.getElementById("communityTitle")) {
-      clearInterval(watcher);
-      return;
-    }
-
-    const title = doc.createElement("div");
+    const title = document.createElement("div");
     title.id = "communityTitle";
-    title.style.textAlign = "center";
-    title.style.fontSize = "18pt";
-    title.style.fontWeight = "bold";
-    title.style.marginTop = "10px";
-    title.innerText = `רישום לקהילת ${community}`;
+    title.style.cssText =
+      "text-align:center;font-size:18pt;font-weight:bold;margin:10px 0;color:#236fa1;";
+    title.textContent = `רישום לקהילת ${community}`;
 
-    container.appendChild(title);
+    // לשתול ממש אחרי pre-content אבל בתוך אותו box
+    pre.insertAdjacentElement("afterend", title);
 
-    clearInterval(watcher);
+    console.log("Inserted title");
+  }
 
-  }, 300);
+  // 3) להריץ פעם אחת ואז גם "להילחם" ברינדורים חוזרים
+  ensureTitle();
 
+  // Polling קבוע (כי Angular יכול למחוק בלי להפעיל observer בצורה צפויה)
+  const t = setInterval(ensureTitle, 250);
+
+  // 4) וגם Observer כתוספת (עוזר להפחית זמן תגובה)
+  const obs = new MutationObserver(ensureTitle);
+  obs.observe(document.body, { childList: true, subtree: true });
+
+  // אם תרצה לכבות ידנית אח"כ:
+  window.__stopCommunityTitle = () => {
+    clearInterval(t);
+    obs.disconnect();
+    console.log("Stopped");
+  };
 })();
