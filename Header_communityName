@@ -2,8 +2,7 @@
 
   function getParam(name) {
     const url = new URL(window.location.href);
-    const v = url.searchParams.get(name);
-    return v ? decodeURIComponent(v) : "";
+    return url.searchParams.get(name);
   }
 
   function replaceHeader() {
@@ -11,19 +10,22 @@
     const community = getParam("community");
     if (!community) return;
 
-    document.querySelectorAll("div[style*='text-align: center'] span span")
-      .forEach(el => {
+    const headers = document.querySelectorAll('span[style*="32pt"]');
 
-        const text = el.innerText.replace(/\u00A0/g, "").trim();
-
-        if (text.startsWith("רישום לקהילת")) {
-          el.innerText = `רישום לקהילת ${community}`;
-        }
-
-      });
+    headers.forEach(el => {
+      if (el.innerText.includes("רישום לקהילת")) {
+        el.innerText = `רישום לקהילת ${community}`;
+      }
+    });
   }
 
-  const interval = setInterval(replaceHeader, 300);
-  setTimeout(() => clearInterval(interval), 10000);
+  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
+  const interval = setInterval(() => {
+    replaceHeader();
+
+    if (document.body.innerText.includes(getParam("community"))) {
+      clearInterval(interval);
+    }
+  }, 300);
 
 })();
