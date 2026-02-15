@@ -2,7 +2,11 @@
 
   function getParam(name) {
     const url = new URL(window.location.href);
-    return url.searchParams.get(name);
+    return decodeURIComponent(url.searchParams.get(name) || "");
+  }
+
+  function normalize(text) {
+    return text.replace(/\u00A0/g, " ").trim(); // מנקה nbsp
   }
 
   function replaceHeader() {
@@ -10,12 +14,14 @@
     const community = getParam("community");
     if (!community) return;
 
-    const spans = document.querySelectorAll("span");
+    document.querySelectorAll("span").forEach(el => {
 
-    spans.forEach(el => {
-      if (el.innerText.trim() === "רישום לקהילת -") {
+      const t = normalize(el.innerText);
+
+      if (t.includes("רישום לקהילת")) {
         el.innerText = `רישום לקהילת ${community}`;
       }
+
     });
   }
 
