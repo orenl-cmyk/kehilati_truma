@@ -1,3 +1,5 @@
+console.log("community header script loaded");
+
 (function () {
 
   const community = decodeURIComponent(
@@ -7,7 +9,6 @@
   if (!community) return;
 
   const add = () => {
-
     const box = document.querySelector(".content-box");
     if (!box) return;
 
@@ -20,7 +21,6 @@
         </div>`
       );
     }
-
   };
 
   setInterval(add, 300);
