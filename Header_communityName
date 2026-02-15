@@ -2,11 +2,8 @@
 
   function getParam(name) {
     const url = new URL(window.location.href);
-    return decodeURIComponent(url.searchParams.get(name) || "");
-  }
-
-  function normalize(text) {
-    return text.replace(/\u00A0/g, " ").trim(); // מנקה nbsp
+    const v = url.searchParams.get(name);
+    return v ? decodeURIComponent(v) : "";
   }
 
   function replaceHeader() {
@@ -14,23 +11,19 @@
     const community = getParam("community");
     if (!community) return;
 
-    document.querySelectorAll("span").forEach(el => {
+    document.querySelectorAll("div[style*='text-align: center'] span span")
+      .forEach(el => {
 
-      const t = normalize(el.innerText);
+        const text = el.innerText.replace(/\u00A0/g, "").trim();
 
-      if (t.includes("רישום לקהילת")) {
-        el.innerText = `רישום לקהילת ${community}`;
-      }
+        if (text.startsWith("רישום לקהילת")) {
+          el.innerText = `רישום לקהילת ${community}`;
+        }
 
-    });
+      });
   }
 
-  const interval = setInterval(() => {
-    replaceHeader();
-
-    if (document.body.innerText.includes(getParam("community"))) {
-      clearInterval(interval);
-    }
-  }, 300);
+  const interval = setInterval(replaceHeader, 300);
+  setTimeout(() => clearInterval(interval), 10000);
 
 })();
