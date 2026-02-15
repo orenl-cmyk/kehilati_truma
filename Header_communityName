@@ -2,30 +2,41 @@
 
   function getParam(name) {
     const url = new URL(window.location.href);
-    return url.searchParams.get(name);
+    const v = url.searchParams.get(name);
+    return v ? decodeURIComponent(v) : "";
   }
 
-  function replaceHeader() {
+  const community = getParam("community");
+  if (!community) return;
 
-    const community = getParam("community");
-    if (!community) return;
+  const watcher = setInterval(() => {
 
-    const headers = document.querySelectorAll('span[style*="32pt"]');
+    const frame = document.querySelector("iframe");
+    if (!frame || !frame.contentDocument) return;
 
-    headers.forEach(el => {
-      if (el.innerText.includes("רישום לקהילת")) {
-        el.innerText = `רישום לקהילת ${community}`;
-      }
-    });
-  }
+    const doc = frame.contentDocument;
+    const container = doc.querySelector(".pre-content");
 
-  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
-  const interval = setInterval(() => {
-    replaceHeader();
+    if (!container) return;
 
-    if (document.body.innerText.includes(getParam("community"))) {
-      clearInterval(interval);
+    // לא להוסיף פעמיים
+    if (doc.getElementById("communityTitle")) {
+      clearInterval(watcher);
+      return;
     }
+
+    const title = doc.createElement("div");
+    title.id = "communityTitle";
+    title.style.textAlign = "center";
+    title.style.fontSize = "18pt";
+    title.style.fontWeight = "bold";
+    title.style.marginTop = "10px";
+    title.innerText = `רישום לקהילת ${community}`;
+
+    container.appendChild(title);
+
+    clearInterval(watcher);
+
   }, 300);
 
 })();
