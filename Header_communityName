@@ -10,16 +10,15 @@
     const community = getParam("community");
     if (!community) return;
 
-    const headers = document.querySelectorAll('span[style*="32pt"]');
+    const spans = document.querySelectorAll("span");
 
-    headers.forEach(el => {
-      if (el.innerText.includes("רישום לקהילת")) {
+    spans.forEach(el => {
+      if (el.innerText.trim() === "רישום לקהילת -") {
         el.innerText = `רישום לקהילת ${community}`;
       }
     });
   }
 
-  // נריץ שוב ושוב עד שאוריגמי סיים לרנדר
   const interval = setInterval(() => {
     replaceHeader();
 
