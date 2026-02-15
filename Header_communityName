@@ -1,51 +1,28 @@
 (function () {
-  // 1) קח את community מה-URL
+
   const community = decodeURIComponent(
     new URL(window.location.href).searchParams.get("community") || ""
   );
-  if (!community) {
-    console.log("No community param");
-    return;
-  }
 
-  // 2) פונקציה שמוודאת שהכותרת קיימת תמיד
-  function ensureTitle() {
-    const pre = document.querySelector(".pre-content");
-    if (!pre) return;
+  if (!community) return;
 
-    // הכי חשוב: לשתול בתוך אותו content-box (ולא סתם אחרי pre-content)
-    const box = pre.closest(".content-box");
+  const add = () => {
+
+    const box = document.querySelector(".content-box");
     if (!box) return;
 
-    // אם כבר קיים בתוך box - לא להוסיף שוב
-    if (box.querySelector("#communityTitle")) return;
+    if (!document.getElementById("communityTitle")) {
+      box.insertAdjacentHTML(
+        "afterend",
+        `<div id="communityTitle"
+          style="text-align:center;font-size:18pt;font-weight:bold;color:#236fa1;margin:10px 0">
+          רישום לקהילת ${community}
+        </div>`
+      );
+    }
 
-    const title = document.createElement("div");
-    title.id = "communityTitle";
-    title.style.cssText =
-      "text-align:center;font-size:18pt;font-weight:bold;margin:10px 0;color:#236fa1;";
-    title.textContent = `רישום לקהילת ${community}`;
-
-    // לשתול ממש אחרי pre-content אבל בתוך אותו box
-    pre.insertAdjacentElement("afterend", title);
-
-    console.log("Inserted title");
-  }
-
-  // 3) להריץ פעם אחת ואז גם "להילחם" ברינדורים חוזרים
-  ensureTitle();
-
-  // Polling קבוע (כי Angular יכול למחוק בלי להפעיל observer בצורה צפויה)
-  const t = setInterval(ensureTitle, 250);
-
-  // 4) וגם Observer כתוספת (עוזר להפחית זמן תגובה)
-  const obs = new MutationObserver(ensureTitle);
-  obs.observe(document.body, { childList: true, subtree: true });
-
-  // אם תרצה לכבות ידנית אח"כ:
-  window.__stopCommunityTitle = () => {
-    clearInterval(t);
-    obs.disconnect();
-    console.log("Stopped");
   };
+
+  setInterval(add, 300);
+
 })();
