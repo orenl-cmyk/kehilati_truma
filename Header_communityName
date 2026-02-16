@@ -5,20 +5,43 @@
 
   if (!community) return;
 
-  const interval = setInterval(() => {
+  function rewrite(header) {
+
+    const img = header.querySelector("img");
+    if (!img) return;
+
+    header.innerHTML = `
+      <div style="text-align:right">${img.outerHTML}</div>
+      <div id="community-header" style="
+        text-align:center;
+        font-weight:bold;
+        color:#1f5fa8;
+        margin:6px 0;
+        padding:0 10px;
+        line-height:1.2;
+        font-size:clamp(16px,5vw,16px);
+        word-break:break-word;
+      ">
+        רישום לקהילת ${community}
+      </div>
+    `;
+  }
+
+  function attachObserver() {
 
     const header = document.querySelector(".pre-content");
-    if (!header) return;
-
-    header.innerHTML = header.innerHTML.replace(
-      "%%community%%",
-      community
-    );
-
-    if (!header.innerHTML.includes("%%community%%")) {
-      clearInterval(interval);
+    if (!header) {
+      requestAnimationFrame(attachObserver);
+      return;
     }
 
-  }, 200);
+    rewrite(header);
+
+    const obs = new MutationObserver(() => rewrite(header));
+    obs.observe(header, { childList: true });
+
+  }
+
+  attachObserver();
 
 })();
