@@ -1,16 +1,19 @@
 (function () {
 
   function getParam(name) {
-    const raw = new URL(window.location.href).searchParams.get(name) || "";
-    return decodeURIComponent(raw.replace(/\+/g, " "));
+    return new URL(window.location.href).searchParams.get(name) || "";
   }
 
   const community = getParam("community");
   if (!community) return;
 
-  const add = () => {
+  const waitForBox = () => {
     const box = document.querySelector(".content-box");
-    if (!box) return;
+
+    if (!box) {
+      requestAnimationFrame(waitForBox);
+      return;
+    }
 
     if (!document.getElementById("communityTitle")) {
       box.insertAdjacentHTML(
@@ -23,6 +26,6 @@
     }
   };
 
-  setInterval(add, 300);
+  waitForBox();
 
 })();
