@@ -5,50 +5,43 @@
 
   if (!community) return;
 
-  const FONT_MIN = 12;
-  const FONT_MAX = 20;
-
-  function forceBanner() {
-
-    const header = document.querySelector(".pre-content");
-    if (!header) return;
+  function rewrite(header) {
 
     const img = header.querySelector("img");
     if (!img) return;
 
-    const banner = `
-      <div style="
-        position:relative;
-        width:100%;
+    header.innerHTML = `
+      <div style="text-align:right">${img.outerHTML}</div>
+      <div id="community-header" style="
+        text-align:center;
+        font-weight:bold;
+        color:#1f5fa8;
+        margin:6px 0;
+        padding:0 10px;
+        line-height:1.2;
+        font-size:clamp(16px,5vw,16px);
+        word-break:break-word;
       ">
-        ${img.outerHTML}
-
-        <div style="
-          position:absolute;
-          bottom:10%;
-          left:50%;
-          transform:translateX(-50%);
-          width:90%;
-          text-align:center;
-          font-weight:bold;
-          color:white;
-          text-shadow:0 2px 6px rgba(0,0,0,0.7);
-          font-size:clamp(${FONT_MIN}px,5vw,${FONT_MAX}px);
-          line-height:1.2;
-          word-break:break-word;
-        ">
-          רישום לקהילת ${community}
-        </div>
+        רישום לקהילת ${community}
       </div>
     `;
-
-    // אם Angular דרס — אנחנו מחזירים מיד
-    if (!header.innerHTML.includes("רישום לקהילת")) {
-      header.innerHTML = banner;
-    }
   }
 
-  // כפייה רציפה
-  setInterval(forceBanner, 200);
+  function attachObserver() {
+
+    const header = document.querySelector(".pre-content");
+    if (!header) {
+      requestAnimationFrame(attachObserver);
+      return;
+    }
+
+    rewrite(header);
+
+    const obs = new MutationObserver(() => rewrite(header));
+    obs.observe(header, { childList: true });
+
+  }
+
+  attachObserver();
 
 })();
