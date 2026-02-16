@@ -5,8 +5,8 @@
 
   if (!community) return;
 
-  const FONT_MIN = 18;
-  const FONT_MAX = 42;
+  const FONT_MIN = 12;
+  const FONT_MAX = 20;
 
   function forceBanner() {
 
