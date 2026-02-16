@@ -1,7 +1,7 @@
 (function () {
 
   const PUBLIC_IMAGE =
-    "https://live-public.origamicloud.ms/file/?f=tfUgz5YS8tGcK8P%2BWyxhhz3qMv8M3Cm6P5JtgMvxC0BqfJcasxg5BJQ87OWa95DHIiAteUCwZHeLMa9o%2FoQc8%2FZsrn1E3sXT6z39DDLfdL1oyHq%2Ftg9t19vI%2FpE88FqVFkq3fQx3J%2Fl8Dg2WHi2T0%3D50105330bb741f974827746b6e55eae6cba54a08f8917529962289f4256ba93bdb2d013559ecf62e17c1fd7658158e54a11f4c5cca7ca8a9994d31cc8273cf1ca2pzZGZhODk3Z3lmdWhhNw";
+    "https://live-public.origamicloud.ms/file/?f=zInpfnwS%2FSxObyDEG%2FylVZt%2BqGpCcr0BenZkVeyLEwo%2FoS%2BFAai5bk1At3WsVTy22mAuoIoOewG7DvhdTKa9xL70Mu6jB06O7hiwS%2FC6l8KrZmw%2B2nuA4VAu%2Fh8tidYyGiN2y8S9NapAByM5J4NJI%3D19c07a5f7bb701bcb4ac3fedfc42708c1e48ba1b14aec8fc22f42da7a0f90b32f064248a62a57330ce2819d6470e9d656aeb3270a9cba3b3bc3bf1fa7774855fa2pzZGZhODk3Z3lmdWhhNz";
 
   function injectImage() {
 
