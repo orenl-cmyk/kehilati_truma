@@ -19,7 +19,7 @@
         margin:6px 0;
         padding:0 10px;
         line-height:1.2;
-        font-size:clamp(16px,5vw,20px);
+        font-size:clamp(16px,5vw,16px);
         word-break:break-word;
       ">
         רישום לקהילת ${community}
