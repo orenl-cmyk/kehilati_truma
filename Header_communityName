@@ -1,38 +1,17 @@
 (function () {
 
-  function getParam(name) {
-    return new URL(window.location.href).searchParams.get(name) || "";
-  }
+  const community =
+    new URL(window.location.href).searchParams.get("community") || "";
 
-  const community = getParam("community");
   if (!community) return;
 
-  function headerStable(header) {
-    const children = header.children;
-    return children.length >= 3;
-  }
-
-  function rewriteHeader() {
-
-    const header = document.querySelector(".pre-content");
-    if (!header) {
-      requestAnimationFrame(rewriteHeader);
-      return;
-    }
-
-    // מחכים שאוריגמי יסיים לבנות
-    if (!headerStable(header)) {
-      requestAnimationFrame(rewriteHeader);
-      return;
-    }
-
-    if (header.innerHTML.includes("community-header")) return;
+  function rewrite(header) {
 
     const img = header.querySelector("img");
     if (!img) return;
 
     header.innerHTML = `
-      <div>${img.outerHTML}</div>
+      <div style="text-align:right">${img.outerHTML}</div>
       <div id="community-header" style="
         text-align:center;
         font-weight:bold;
@@ -48,6 +27,21 @@
     `;
   }
 
-  rewriteHeader();
+  function attachObserver() {
+
+    const header = document.querySelector(".pre-content");
+    if (!header) {
+      requestAnimationFrame(attachObserver);
+      return;
+    }
+
+    rewrite(header);
+
+    const obs = new MutationObserver(() => rewrite(header));
+    obs.observe(header, { childList: true });
+
+  }
+
+  attachObserver();
 
 })();
