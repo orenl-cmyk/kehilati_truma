@@ -5,24 +5,40 @@
 
   if (!community) return;
 
+  // 🎛 שליטה בגודל פונט
+  const FONT_MIN = 12; // מובייל
+  const FONT_MAX = 20; // דסקטופ
+
   function rewrite(header) {
 
     const img = header.querySelector("img");
     if (!img) return;
 
     header.innerHTML = `
-      <div style="text-align:right">${img.outerHTML}</div>
-      <div id="community-header" style="
-        text-align:center;
-        font-weight:bold;
-        color:#1f5fa8;
-        margin:6px 0;
-        padding:0 10px;
-        line-height:1.2;
-        font-size:clamp(16px,5vw,16px);
-        word-break:break-word;
+      <div style="
+        position:relative;
+        width:100%;
+        overflow:hidden;
       ">
-        רישום לקהילת ${community}
+        ${img.outerHTML}
+
+        <div id="community-header" style="
+          position:absolute;
+          bottom:8%;
+          left:50%;
+          transform:translateX(-50%);
+          text-align:center;
+          font-weight:bold;
+          color:white;
+          padding:0 12px;
+          line-height:1.2;
+          text-shadow:0 2px 6px rgba(0,0,0,0.6);
+          width:90%;
+          word-break:break-word;
+          font-size:clamp(${FONT_MIN}px, 5vw, ${FONT_MAX}px);
+        ">
+          רישום לקהילת ${community}
+        </div>
       </div>
     `;
   }
