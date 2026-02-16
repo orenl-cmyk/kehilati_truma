@@ -1,0 +1,43 @@
+(function () {
+
+  function getParam(name) {
+    return new URL(window.location.href).searchParams.get(name) || "";
+  }
+
+  const community = getParam("community");
+  if (!community) return;
+
+  function injectHeader() {
+
+    if (document.getElementById("community-header")) return;
+
+    const container =
+      document.querySelector("#entity-container") ||
+      document.querySelector(".step-content") ||
+      document.body;
+
+    if (!container) return;
+
+    const header = document.createElement("div");
+    header.id = "community-header";
+    header.innerText = `רישום לקהילת ${community}`;
+
+    header.style.textAlign = "center";
+    header.style.fontSize = "32px";
+    header.style.fontWeight = "bold";
+    header.style.color = "#1f5fa8";
+    header.style.margin = "10px 0";
+    header.style.fontFamily = "'Trebuchet MS', sans-serif";
+
+    container.prepend(header);
+  }
+
+  const interval = setInterval(() => {
+    injectHeader();
+
+    if (document.getElementById("community-header")) {
+      clearInterval(interval);
+    }
+  }, 300);
+
+})();
