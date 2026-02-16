@@ -7,37 +7,60 @@
   const community = getParam("community");
   if (!community) return;
 
-  function injectHeader() {
+  function buildHeader() {
 
-    if (document.getElementById("community-header")) return;
+    const origamiHeader = document.querySelector(".pre-content");
+    if (!origamiHeader) {
+      requestAnimationFrame(buildHeader);
+      return;
+    }
+
+    // לא לבנות פעמיים
+    if (document.getElementById("custom-header")) return;
+
+    // מסתירים את האדר המקורי
+    origamiHeader.style.display = "none";
 
     const container =
       document.querySelector("#entity-container") ||
-      document.querySelector(".step-content") ||
       document.body;
 
-    if (!container) return;
-
     const header = document.createElement("div");
-    header.id = "community-header";
-    header.innerText = `רישום לקהילת ${community}`;
+    header.id = "custom-header";
 
-    header.style.textAlign = "center";
-    header.style.fontSize = "32px";
-    header.style.fontWeight = "bold";
-    header.style.color = "#1f5fa8";
-    header.style.margin = "10px 0";
-    header.style.fontFamily = "'Trebuchet MS', sans-serif";
+    header.innerHTML = `
+      <div style="
+        position:relative;
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
+      ">
+        <img src="https://live-public.origamicloud.ms/file/?f=%2Bl3NlY%2BdWk2opaFwkoNy4YL1vUE4JwA%2BZwHlmfbt39STYlhJQnr04Kntqy1e1IOr832ASIh3dy%2BaL1T95j9TFWKmQ9q2%2Fu4h1C%2FqCaD5KwFEiHbjsiXF0QV6vNvFKttoA7Ia72evoORjZ4e0EiEE8%3D554150b41469a1f90a00f205001483ffb04ead9a71653489a986c3a8e2d3ffb445904da958c5727d9b904107db285316685287c37e88d78c5a437bb70c3d1bb8a2pzZGZhODk3Z3lmdWhhN7"
+          style="width:100%;height:auto;display:block;" />
+
+        <div style="
+          position:absolute;
+          bottom:8%;
+          left:50%;
+          transform:translateX(-50%);
+          color:white;
+          font-weight:bold;
+          text-align:center;
+          text-shadow:0 2px 4px rgba(0,0,0,0.5);
+          padding:0 12px;
+          font-size:clamp(16px,5vw,36px);
+          line-height:1.2;
+          width:90%;
+          word-break:break-word;
+        ">
+          רישום לקהילת ${community}
+        </div>
+      </div>
+    `;
 
     container.prepend(header);
   }
 
-  const interval = setInterval(() => {
-    injectHeader();
-
-    if (document.getElementById("community-header")) {
-      clearInterval(interval);
-    }
-  }, 300);
+  buildHeader();
 
 })();
