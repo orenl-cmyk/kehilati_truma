@@ -1,33 +1,31 @@
 (function () {
 
-  const community =
-    new URL(window.location.href).searchParams.get("community") || "";
+  const PUBLIC_IMAGE =
+    "https://live-public.origamicloud.ms/file/?f=zVMpaelTxHfG%2Fvs2HZiEBInc89%2Fyca7nlamG5YAxXLBnJttmSTFwPxeZvy399bCNwCXSMVY%2BSj%2Bm482GnyOcbrJLv4aRsAv1%2B991pAC42LpWaKoWckpEkWn0Yn%2BLhS1DXPvEqLDsK%2FatHPZNnm2jM%3Dfce67b0b9e0879505065c3ba32a95529d0f1d1129ead1da3aaa2cbdf821f9aca91cc0528ad88d17ac4385fe35e8e935a81fcbc1f45a9baf961a53b2c1b31034da2pzZGZhODk3Z3lmdWhhNw";
 
-  if (!community) return;
-
-  function inject() {
-
-    if (document.getElementById("community-title")) return;
+  function injectImage() {
 
     const container = document.querySelector("#entity-container");
     if (!container) {
-      requestAnimationFrame(inject);
+      requestAnimationFrame(injectImage);
       return;
     }
 
-    const title = document.createElement("div");
-    title.id = "community-title";
-    title.innerText = `רישום לקהילת ${community}`;
+    if (document.getElementById("custom-image")) return;
 
-    title.style.textAlign = "center";
-    title.style.fontWeight = "bold";
-    title.style.color = "#1f5fa8";
-    title.style.margin = "12px 0";
-    title.style.fontSize = "clamp(18px,4vw,36px)";
+    const img = document.createElement("img");
+    img.id = "custom-image";
+    img.src = PUBLIC_IMAGE;
 
-    container.prepend(title);
+    img.style.width = "100%";
+    img.style.height = "auto";
+    img.style.display = "block";
+    img.style.marginBottom = "12px";
+    img.style.borderRadius = "6px";
+
+    container.prepend(img);
   }
 
-  inject();
+  injectImage();
 
 })();
