@@ -1,11 +1,11 @@
-console.log("community header script loaded");
-
 (function () {
 
-  const community = decodeURIComponent(
-    new URL(window.location.href).searchParams.get("community") || ""
-  );
+  function getParam(name) {
+    const raw = new URL(window.location.href).searchParams.get(name) || "";
+    return decodeURIComponent(raw.replace(/\+/g, " "));
+  }
 
+  const community = getParam("community");
   if (!community) return;
 
   const add = () => {
