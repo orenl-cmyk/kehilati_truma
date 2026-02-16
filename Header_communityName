@@ -5,43 +5,29 @@
 
   if (!community) return;
 
-  function rewrite(header) {
+  function inject() {
 
-    const img = header.querySelector("img");
-    if (!img) return;
+    if (document.getElementById("community-title")) return;
 
-    header.innerHTML = `
-      <div style="text-align:right">${img.outerHTML}</div>
-      <div id="community-header" style="
-        text-align:center;
-        font-weight:bold;
-        color:#1f5fa8;
-        margin:6px 0;
-        padding:0 10px;
-        line-height:1.2;
-        font-size:clamp(16px,5vw,16px);
-        word-break:break-word;
-      ">
-        רישום לקהילת ${community}
-      </div>
-    `;
-  }
-
-  function attachObserver() {
-
-    const header = document.querySelector(".pre-content");
-    if (!header) {
-      requestAnimationFrame(attachObserver);
+    const container = document.querySelector("#entity-container");
+    if (!container) {
+      requestAnimationFrame(inject);
       return;
     }
 
-    rewrite(header);
+    const title = document.createElement("div");
+    title.id = "community-title";
+    title.innerText = `רישום לקהילת ${community}`;
 
-    const obs = new MutationObserver(() => rewrite(header));
-    obs.observe(header, { childList: true });
+    title.style.textAlign = "center";
+    title.style.fontWeight = "bold";
+    title.style.color = "#1f5fa8";
+    title.style.margin = "12px 0";
+    title.style.fontSize = "clamp(18px,4vw,36px)";
 
+    container.prepend(title);
   }
 
-  attachObserver();
+  inject();
 
 })();
