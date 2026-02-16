@@ -7,37 +7,36 @@
   const community = getParam("community");
   if (!community) return;
 
-  function rewriteHeader() {
+  function injectHeader() {
 
-    const header = document.querySelector(".pre-content");
-    if (!header) {
-      requestAnimationFrame(rewriteHeader);
-      return;
-    }
+    const headerBox = document.querySelector(".pre-content");
+    if (!headerBox) return;
 
-    // אם כבר שוכתב — לא לגעת שוב
-    if (header.innerHTML.includes("community-header")) return;
+    if (document.getElementById("community-header")) return;
 
-    const img = header.querySelector("img");
-    if (!img) return;
+    const title = document.createElement("div");
+    title.id = "community-header";
+    title.innerText = `רישום לקהילת ${community}`;
 
-    header.innerHTML = `
-      <div>${img.outerHTML}</div>
-      <div id="community-header" style="
-        text-align:center;
-        font-weight:bold;
-        color:#1f5fa8;
-        margin:6px 0;
-        padding:0 10px;
-        line-height:1.2;
-        font-size:clamp(16px,5vw,30px);
-        word-break:break-word;
-      ">
-        רישום לקהילת ${community}
-      </div>
-    `;
+    title.style.textAlign = "center";
+    title.style.fontWeight = "bold";
+    title.style.color = "#1f5fa8";
+    title.style.margin = "8px 0";
+    title.style.padding = "0 10px";
+    title.style.lineHeight = "1.3";
+
+    // רספונסיבי
+    title.style.fontSize = "clamp(16px, 4vw, 32px)";
+
+    headerBox.appendChild(title);
   }
 
-  rewriteHeader();
+  const interval = setInterval(() => {
+    injectHeader();
+
+    if (document.getElementById("community-header")) {
+      clearInterval(interval);
+    }
+  }, 300);
 
 })();
