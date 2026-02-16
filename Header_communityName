@@ -5,50 +5,20 @@
 
   if (!community) return;
 
-  const FONT_MIN = 18;
-  const FONT_MAX = 42;
-
-  function forceBanner() {
+  const interval = setInterval(() => {
 
     const header = document.querySelector(".pre-content");
     if (!header) return;
 
-    const img = header.querySelector("img");
-    if (!img) return;
+    header.innerHTML = header.innerHTML.replace(
+      "%%community%%",
+      community
+    );
 
-    const banner = `
-      <div style="
-        position:relative;
-        width:100%;
-      ">
-        ${img.outerHTML}
-
-        <div style="
-          position:absolute;
-          bottom:10%;
-          left:50%;
-          transform:translateX(-50%);
-          width:90%;
-          text-align:center;
-          font-weight:bold;
-          color:white;
-          text-shadow:0 2px 6px rgba(0,0,0,0.7);
-          font-size:clamp(${FONT_MIN}px,5vw,${FONT_MAX}px);
-          line-height:1.2;
-          word-break:break-word;
-        ">
-          רישום לקהילת ${community}
-        </div>
-      </div>
-    `;
-
-    // אם Angular דרס — אנחנו מחזירים מיד
-    if (!header.innerHTML.includes("רישום לקהילת")) {
-      header.innerHTML = banner;
+    if (!header.innerHTML.includes("%%community%%")) {
+      clearInterval(interval);
     }
-  }
 
-  // כפייה רציפה
-  setInterval(forceBanner, 200);
+  }, 200);
 
 })();
