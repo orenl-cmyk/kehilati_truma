@@ -1,31 +1,22 @@
 (function () {
 
-  const PUBLIC_IMAGE =
-    "";
+  const community =
+    new URL(window.location.href).searchParams.get("community") || "";
 
-  function injectImage() {
+  if (!community) return;
 
-    const container = document.querySelector("#entity-container");
-    if (!container) {
-      requestAnimationFrame(injectImage);
+  const interval = setInterval(() => {
+
+    const header = document.querySelector(".pre-content");
+    if (!header) return;
+
+    if (!header.innerHTML.includes("@")) {
+      clearInterval(interval);
       return;
     }
 
-    if (document.getElementById("custom-image")) return;
+    header.innerHTML = header.innerHTML.replace("@", community);
 
-    const img = document.createElement("img");
-    img.id = "custom-image";
-    img.src = PUBLIC_IMAGE;
-
-    img.style.width = "100%";
-    img.style.height = "auto";
-    img.style.display = "block";
-    img.style.marginBottom = "12px";
-    img.style.borderRadius = "6px";
-
-    container.prepend(img);
-  }
-
-  injectImage();
+  }, 200);
 
 })();
