@@ -1,14 +1,8 @@
-(function () {
-
-  function decodeTwice(str) {
-    try { str = decodeURIComponent(str); } catch(e) {}
-    try { str = decodeURIComponent(str); } catch(e) {}
-    return str.replace(/\+/g, " ");
-  }
 const raw =
   new URL(window.location.href).searchParams.get("community") || "";
 
-const community = decodeTwice(raw);
+const community =
+  decodeURIComponent(raw).replace(/\+/g, " ");
 
 
   if (!community) return;
