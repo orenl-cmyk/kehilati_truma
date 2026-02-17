@@ -15,10 +15,24 @@
 
     if (!header) return;
 
-    if (header.innerHTML.includes("@")) {
-      header.innerHTML = header.innerHTML.replace("@", community);
+    // אם כבר הוספנו — לעצור
+    if (doc.getElementById("community-title")) {
       clearInterval(interval);
+      return;
     }
+
+    const title = doc.createElement("div");
+    title.id = "community-title";
+    title.innerText = "רישום לקהילת " + community;
+
+    title.style.textAlign = "center";
+    title.style.fontWeight = "bold";
+    title.style.fontSize = "20px";
+    title.style.margin = "10px 0";
+
+    header.appendChild(title);
+
+    clearInterval(interval);
 
   }, 200);
 
