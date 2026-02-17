@@ -1,17 +1,24 @@
 (function () {
 
+  const community =
+    new URL(window.location.href).searchParams.get("community") || "";
+
+  if (!community) return;
+
   const interval = setInterval(() => {
 
     const iframe = document.querySelector("#iframe_div iframe");
     if (!iframe || !iframe.contentDocument) return;
 
     const doc = iframe.contentDocument;
+    const header = doc.querySelector(".pre-content");
 
-    const img = doc.querySelector(".pre-content img");
-    if (!img) return;
+    if (!header) return;
 
-    img.remove();
-    clearInterval(interval);
+    if (header.innerHTML.includes("@")) {
+      header.innerHTML = header.innerHTML.replace("@", community);
+      clearInterval(interval);
+    }
 
   }, 200);
 
