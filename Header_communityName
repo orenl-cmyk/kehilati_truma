@@ -5,29 +5,22 @@
 
   if (!community) return;
 
-  const replace = () => {
-
-    const walker = document.createTreeWalker(
-      document.body,
-      NodeFilter.SHOW_TEXT,
-      null
-    );
-
-    let node;
-
-    while ((node = walker.nextNode())) {
-      if (node.nodeValue.includes("@")) {
-        node.nodeValue = node.nodeValue.replace("@", community);
-      }
-    }
-  };
-
   const interval = setInterval(() => {
-    replace();
 
-    if (!document.body.innerText.includes("@")) {
+    const iframe = document.querySelector("#iframe_div iframe");
+    if (!iframe || !iframe.contentDocument) return;
+
+    const doc = iframe.contentDocument;
+
+    const header = doc.querySelector(".pre-content");
+    if (!header) return;
+
+    if (!header.innerHTML.includes("@")) {
       clearInterval(interval);
+      return;
     }
+
+    header.innerHTML = header.innerHTML.replace("@", community);
 
   }, 200);
 
