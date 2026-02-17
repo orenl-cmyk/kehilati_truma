@@ -18,7 +18,7 @@
 
     title.style.textAlign = "center";
     title.style.fontWeight = "bold";
-    title.style.fontSize = "20px";
+    title.style.fontSize = "10px";
     title.style.margin = "10px 0";
 
     header.appendChild(title);
