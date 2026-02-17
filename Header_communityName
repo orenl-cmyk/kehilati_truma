@@ -1,10 +1,5 @@
 (function () {
 
-  const community =
-    new URL(window.location.href).searchParams.get("community") || "";
-
-  if (!community) return;
-
   const interval = setInterval(() => {
 
     const iframe = document.querySelector("#iframe_div iframe");
@@ -12,15 +7,11 @@
 
     const doc = iframe.contentDocument;
 
-    const header = doc.querySelector(".pre-content");
-    if (!header) return;
+    const img = doc.querySelector(".pre-content img");
+    if (!img) return;
 
-    if (!header.innerHTML.includes("@")) {
-      clearInterval(interval);
-      return;
-    }
-
-    header.innerHTML = header.innerHTML.replace("@", community);
+    img.remove();
+    clearInterval(interval);
 
   }, 200);
 
