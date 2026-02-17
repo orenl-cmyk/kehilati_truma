@@ -5,21 +5,12 @@
 
   if (!community) return;
 
-  const interval = setInterval(() => {
+  function run(doc) {
 
-    const iframe = document.querySelector("#iframe_div iframe");
-    if (!iframe || !iframe.contentDocument) return;
-
-    const doc = iframe.contentDocument;
     const header = doc.querySelector(".pre-content");
+    if (!header) return false;
 
-    if (!header) return;
-
-    // אם כבר הוספנו — לעצור
-    if (doc.getElementById("community-title")) {
-      clearInterval(interval);
-      return;
-    }
+    if (doc.getElementById("community-title")) return true;
 
     const title = doc.createElement("div");
     title.id = "community-title";
@@ -32,7 +23,24 @@
 
     header.appendChild(title);
 
-    clearInterval(interval);
+    return true;
+  }
+
+  const interval = setInterval(() => {
+
+    // נסיון 1 — אם אנחנו כבר בתוך iframe
+    if (run(document)) {
+      clearInterval(interval);
+      return;
+    }
+
+    // נסיון 2 — אם אנחנו מחוץ ל iframe
+    const iframe = document.querySelector("#iframe_div iframe");
+    if (iframe && iframe.contentDocument) {
+      if (run(iframe.contentDocument)) {
+        clearInterval(interval);
+      }
+    }
 
   }, 200);
 
