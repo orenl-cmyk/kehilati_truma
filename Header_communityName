@@ -18,8 +18,11 @@
 
     title.style.textAlign = "center";
     title.style.fontWeight = "bold";
-    title.style.fontSize = "8px";
-    title.style.margin = "10px 0";
+    title.style.margin = "6px 0";
+
+    // 🎯 רספונסיבי
+    const isMobile = doc.defaultView.innerWidth < 600;
+    title.style.fontSize = isMobile ? "8px" : "14px";
 
     header.appendChild(title);
 
@@ -28,13 +31,11 @@
 
   const interval = setInterval(() => {
 
-    // נסיון 1 — אם אנחנו כבר בתוך iframe
     if (run(document)) {
       clearInterval(interval);
       return;
     }
 
-    // נסיון 2 — אם אנחנו מחוץ ל iframe
     const iframe = document.querySelector("#iframe_div iframe");
     if (iframe && iframe.contentDocument) {
       if (run(iframe.contentDocument)) {
