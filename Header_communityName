@@ -1,7 +1,9 @@
 (function () {
 
-  const community =
-    new URL(window.location.href).searchParams.get("community") || "";
+ const raw =
+  new URL(window.location.href).searchParams.get("community") || "";
+
+const community = decodeURIComponent(raw.replace(/\+/g, " "));
 
   if (!community) return;
 
