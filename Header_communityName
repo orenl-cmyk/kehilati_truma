@@ -31,7 +31,7 @@
         title.style.margin = "6px 0";
 
         const isMobile = doc.defaultView.innerWidth < 600;
-        title.style.fontSize = isMobile ? "8px" : "14px";
+        title.style.fontSize = isMobile ? "10px" : "18px";
 
         header.appendChild(title);
         return true;
