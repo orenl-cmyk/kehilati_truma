@@ -1,50 +1,53 @@
-const raw =
-  new URL(window.location.href).searchParams.get("community") || "";
+(function () {
 
-const community =
-  decodeURIComponent(raw).replace(/\+/g, " ");
+  angular.element(document).ready(function () {
 
+    const injector = angular.element(document.body).injector();
+    const $timeout = injector.get('$timeout');
 
-  if (!community) return;
+    $timeout(function () {
 
-  function run(doc) {
+      const raw =
+        new URL(window.location.href).searchParams.get("community") || "";
 
-    const header = doc.querySelector(".pre-content");
-    if (!header) return false;
+      const community =
+        decodeURIComponent(raw).replace(/\+/g, " ");
 
-    if (doc.getElementById("community-title")) return true;
+      if (!community) return;
 
-    const title = doc.createElement("div");
-    title.id = "community-title";
-    title.innerText = "רישום לקהילת " + community;
+      function run(doc) {
 
-    title.style.textAlign = "center";
-    title.style.fontWeight = "bold";
-    title.style.margin = "6px 0";
+        const header = doc.querySelector(".pre-content");
+        if (!header) return false;
 
-    // 🎯 רספונסיבי
-    const isMobile = doc.defaultView.innerWidth < 600;
-    title.style.fontSize = isMobile ? "8px" : "14px";
+        if (doc.getElementById("community-title")) return true;
 
-    header.appendChild(title);
+        const title = doc.createElement("div");
+        title.id = "community-title";
+        title.innerText = "רישום לקהילת " + community;
 
-    return true;
-  }
+        title.style.textAlign = "center";
+        title.style.fontWeight = "bold";
+        title.style.margin = "6px 0";
 
-  const interval = setInterval(() => {
+        const isMobile = doc.defaultView.innerWidth < 600;
+        title.style.fontSize = isMobile ? "8px" : "14px";
 
-    if (run(document)) {
-      clearInterval(interval);
-      return;
-    }
-
-    const iframe = document.querySelector("#iframe_div iframe");
-    if (iframe && iframe.contentDocument) {
-      if (run(iframe.contentDocument)) {
-        clearInterval(interval);
+        header.appendChild(title);
+        return true;
       }
-    }
 
-  }, 200);
+      // main document
+      if (run(document)) return;
+
+      // iframe
+      const iframe = document.querySelector("#iframe_div iframe");
+      if (iframe && iframe.contentDocument) {
+        run(iframe.contentDocument);
+      }
+
+    }, 0); // next digest tick
+
+  });
 
 })();
